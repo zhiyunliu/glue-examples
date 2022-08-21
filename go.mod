@@ -1,19 +1,13 @@
 module github.com/zhiyunliu/glue-examples
 
-go 1.18
+go 1.17
 
 require (
-	github.com/zhiyunliu/glue v0.1.16
-	github.com/zhiyunliu/golibs v0.1.13
+	github.com/zhiyunliu/glue v0.1.17-0.20220821034702-d17dda5cd449
+	github.com/zhiyunliu/golibs v0.1.14-0.20220821034505-765dacd0ef1d
 )
 
 require (
-	go.opentelemetry.io/otel v1.9.0
-	go.opentelemetry.io/otel/exporters/jaeger v1.9.0
-	go.opentelemetry.io/otel/sdk v1.9.0
-	go.opentelemetry.io/otel/trace v1.9.0
-
-
 	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.18 // indirect
 	github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da // indirect
@@ -80,6 +74,10 @@ require (
 	github.com/ugorji/go/codec v1.2.2 // indirect
 	github.com/urfave/cli v1.22.5 // indirect
 	github.com/zhiyunliu/redisqueue/v2 v2.1.1 // indirect
+	go.opentelemetry.io/otel v1.9.0
+	go.opentelemetry.io/otel/exporters/jaeger v1.9.0
+	go.opentelemetry.io/otel/sdk v1.9.0
+	go.opentelemetry.io/otel/trace v1.9.0
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.18.1 // indirect

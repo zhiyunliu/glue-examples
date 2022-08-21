@@ -8,22 +8,22 @@ import (
 
 	"github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue/context"
-	_ "github.com/zhiyunliu/glue/contrib/cache/redis"
-	_ "github.com/zhiyunliu/glue/contrib/config/consul"
-	_ "github.com/zhiyunliu/glue/contrib/config/nacos"
-	_ "github.com/zhiyunliu/glue/contrib/queue/redis"
+
+	// _ "github.com/zhiyunliu/glue/contrib/cache/redis"
+	// _ "github.com/zhiyunliu/glue/contrib/config/consul"
+	// _ "github.com/zhiyunliu/glue/contrib/config/nacos"
+	// _ "github.com/zhiyunliu/glue/contrib/queue/redis"
 	_ "github.com/zhiyunliu/glue/contrib/registry/nacos"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/mysql"
+	// _ "github.com/zhiyunliu/glue/contrib/xdb/mysql"
 	"github.com/zhiyunliu/glue/global"
 	"github.com/zhiyunliu/glue/log"
 	"github.com/zhiyunliu/glue/server/api"
 	"github.com/zhiyunliu/golibs/xlog"
-
 	//_ "github.com/zhiyunliu/glue/contrib/xdb/oracle"
-	_ "github.com/zhiyunliu/glue/contrib/dlocker/redis"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/postgres"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/sqlite"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/sqlserver"
+	// _ "github.com/zhiyunliu/glue/contrib/dlocker/redis"
+	// _ "github.com/zhiyunliu/glue/contrib/xdb/postgres"
+	// _ "github.com/zhiyunliu/glue/contrib/xdb/sqlite"
+	// _ "github.com/zhiyunliu/glue/contrib/xdb/sqlserver"
 )
 
 type demo struct{}
@@ -66,16 +66,18 @@ func main() {
 		return xlog.Stats()
 	})
 
-	app := glue.NewApp(glue.Server(apiSrv), glue.StartedHook(func(ctx sctx.Context) error {
-		log.Debug("global.Config:", global.Config)
-		xx := &XX{}
-		global.Config.Scan(xx)
-		log.Debugf("XX:%+v", xx)
-		return nil
-	}), glue.StartingHook(func(ctx sctx.Context) error {
-		log.Debug("global.Config.start:", global.Config)
-		return nil
-	}))
+	app := glue.NewApp(glue.Server(apiSrv),
+		glue.StartedHook(func(ctx sctx.Context) error {
+			log.Debug("global.Config:", global.Config)
+			xx := &XX{}
+			global.Config.Scan(xx)
+			log.Debugf("XX:%+v", xx)
+			return nil
+		}),
+		glue.StartingHook(func(ctx sctx.Context) error {
+			log.Debug("global.Config.start:", global.Config)
+			return nil
+		}), glue.LogConcurrency(1))
 	app.Start()
 }
 
