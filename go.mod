@@ -3,8 +3,8 @@ module github.com/zhiyunliu/glue-examples
 go 1.17
 
 require (
-	github.com/zhiyunliu/glue v0.1.17-0.20220821034702-d17dda5cd449
-	github.com/zhiyunliu/golibs v0.1.14-0.20220821034505-765dacd0ef1d
+	github.com/zhiyunliu/glue v0.1.19
+	github.com/zhiyunliu/golibs v0.1.14
 )
 
 require (
@@ -96,3 +96,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
+
+replace github.com/zhiyunliu/glue => ../glue
+
+replace github.com/zhiyunliu/golibs => ../golibs
