@@ -18,7 +18,7 @@ func NewDb() *DBdemo {
 func (d *DBdemo) QueryHandle(ctx context.Context) interface{} {
 	dbobj := gel.DB("microsql")
 	idval := ctx.Request().Query().Get("id")
-	sql := `select 1 a, 2 b`
+	sql := `select * from ljy_test`
 
 	rows, err := dbobj.Query(ctx.Context(), sql, map[string]interface{}{
 		"id": idval,

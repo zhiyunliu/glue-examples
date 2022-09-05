@@ -90,12 +90,8 @@ func apiserver() transport.Server {
 		return string(body.GetResult())
 	})
 	apiSrv.Handle("/demoapi", func(ctx context.Context) interface{} {
-		ctx.Log().Debug("demo")
+		ctx.Log().Debug("api.demoapi")
 
-		// body, err := gel.Http().Swap(ctx, "http://apiserver/log/info")
-		// if err != nil {
-		// 	ctx.Log().Error("gel.Http().GetHttp().Swap:", err)
-		// }
 		body, err := gel.RPC().Swap(ctx, "grpc://rpcserver/demorpc", xrpc.WithWaitForReady(false))
 		if err != nil {
 			ctx.Log().Error("gel.RPC().GetRPC().Swap:", err)
@@ -103,7 +99,7 @@ func apiserver() transport.Server {
 		ctx.Log().Debug(string(body.GetResult()))
 		ctx.Log().Debug(body.GetHeader())
 		ctx.Log().Debug(body.GetStatus())
-		time.Sleep(time.Second)
+		//time.Sleep(time.Second)
 		return xtypes.XMap{
 			"a": 1,
 			"b": 2,
@@ -114,7 +110,8 @@ func apiserver() transport.Server {
 
 func mqcserver() transport.Server {
 	mqcSrv := mqc.New("mqcserver", mqc.Log(log.WithRequest(), log.WithResponse()))
-	mqcSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
+	//mqcSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
+
 	mqcSrv.Handle("/demomqc", func(ctx context.Context) interface{} {
 		ctx.Log().Debug("demomqc")
 		body, err := gel.Http().Swap(ctx, "xhttp://apiserver/demoapi", xhttp.WithMethod(http.MethodPost))
@@ -124,7 +121,7 @@ func mqcserver() transport.Server {
 		ctx.Log().Debug(string(body.GetResult()))
 		ctx.Log().Debug(body.GetHeader())
 		ctx.Log().Debug(body.GetStatus())
-		time.Sleep(time.Second * 2)
+		//time.Sleep(time.Second * 2)
 		return xtypes.XMap{
 			"a": 1,
 			"b": 2,
@@ -138,7 +135,7 @@ func rpcserver() transport.Server {
 	rpcSrv := rpc.New("rpcserver", rpc.WithServiceName("rpcserver"), rpc.Log(log.WithRequest(), log.WithResponse()))
 	rpcSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
 	rpcSrv.Handle("/demorpc", func(ctx context.Context) interface{} {
-		time.Sleep(time.Second * 1)
+		//time.Sleep(time.Second * 1)
 		ctx.Log().Debug("demorpc")
 		return xtypes.XMap{
 			"a": 1,
