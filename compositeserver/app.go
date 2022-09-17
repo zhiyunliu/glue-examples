@@ -9,7 +9,6 @@ import (
 	"github.com/zhiyunliu/glue/context"
 	"github.com/zhiyunliu/glue/global"
 	"github.com/zhiyunliu/glue/log"
-	"github.com/zhiyunliu/glue/middleware/tracing"
 	"github.com/zhiyunliu/glue/transport"
 	"github.com/zhiyunliu/glue/xhttp"
 	"github.com/zhiyunliu/glue/xrpc"
@@ -23,7 +22,6 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/jaeger"
-	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
@@ -40,7 +38,7 @@ func init() {
 		rpcserver(),
 	)
 	opts = append(opts, srvOpt, gel.LogConcurrency(1))
-	setTracerProvider("http://127.0.0.1:14268/api/traces")
+	//	setTracerProvider("http://127.0.0.1:14268/api/traces")
 }
 
 // Set global trace provider
@@ -67,7 +65,7 @@ func setTracerProvider(url string) error {
 
 func apiserver() transport.Server {
 	apiSrv := api.New("apiserver", api.WithServiceName("apiserver"), api.Log(log.WithRequest(), log.WithResponse()))
-	apiSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
+	//	apiSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
 	apiSrv.Handle("/log", handles.NewLogDemo())
 	apiSrv.Handle("/xxx", func(ctx context.Context) interface{} {
 		body, err := gel.Http().Swap(ctx, "http://192.168.1.155:8080/demoapi", xhttp.WithMethod(http.MethodPost))
@@ -133,7 +131,7 @@ func mqcserver() transport.Server {
 
 func rpcserver() transport.Server {
 	rpcSrv := rpc.New("rpcserver", rpc.WithServiceName("rpcserver"), rpc.Log(log.WithRequest(), log.WithResponse()))
-	rpcSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
+	//rpcSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
 	rpcSrv.Handle("/demorpc", func(ctx context.Context) interface{} {
 		//time.Sleep(time.Second * 1)
 		ctx.Log().Debug("demorpc")

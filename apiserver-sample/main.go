@@ -57,7 +57,7 @@ func main() {
 		}
 	})
 	apiSrv.Handle("/demo/struct", &demo{})
-	apiSrv.Handle("/demo", func(ctx context.Context) interface{} {
+	apiSrv.Handle("/api/demo/ttt", func(ctx context.Context) interface{} {
 		return map[string]interface{}{
 			"a": "1",
 		}

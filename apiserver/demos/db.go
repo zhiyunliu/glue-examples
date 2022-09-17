@@ -15,6 +15,65 @@ func NewDb() *DBdemo {
 	return &DBdemo{}
 }
 
+func (d *DBdemo) And1Handle(ctx context.Context) interface{} {
+	dbobj := gel.DB("microsql")
+	idval := ctx.Request().Query().Get("id")
+	sql := `select * from ljy_test where ctime > '2022-1-1' &{status}`
+
+	rows, err := dbobj.Query(ctx.Context(), sql, map[string]interface{}{
+		"id":     idval,
+		"status": ctx.Request().Query().Get("status"),
+	})
+	if err != nil {
+		ctx.Log().Error(err)
+	}
+	return rows
+}
+
+func (d *DBdemo) And2Handle(ctx context.Context) interface{} {
+	dbobj := gel.DB("microsql")
+	idval := ctx.Request().Query().Get("id")
+	sql := `select * from ljy_test t where ctime > '2022-1-1' &{t.status}`
+
+	rows, err := dbobj.Query(ctx.Context(), sql, map[string]interface{}{
+		"id":     idval,
+		"status": ctx.Request().Query().Get("status"),
+	})
+	if err != nil {
+		ctx.Log().Error(err)
+	}
+	return rows
+}
+
+func (d *DBdemo) Or1Handle(ctx context.Context) interface{} {
+	dbobj := gel.DB("microsql")
+	idval := ctx.Request().Query().Get("id")
+	sql := `select * from ljy_test where id=1 |{id}`
+
+	rows, err := dbobj.Query(ctx.Context(), sql, map[string]interface{}{
+		"id": idval,
+	})
+	if err != nil {
+		ctx.Log().Error(err)
+	}
+
+	return rows
+}
+func (d *DBdemo) Or2Handle(ctx context.Context) interface{} {
+	dbobj := gel.DB("microsql")
+	idval := ctx.Request().Query().Get("id")
+	sql := `select * from ljy_test  t where id=1 |{t.id}`
+
+	rows, err := dbobj.Query(ctx.Context(), sql, map[string]interface{}{
+		"id": idval,
+	})
+	if err != nil {
+		ctx.Log().Error(err)
+	}
+
+	return rows
+}
+
 func (d *DBdemo) QueryHandle(ctx context.Context) interface{} {
 	dbobj := gel.DB("microsql")
 	idval := ctx.Request().Query().Get("id")

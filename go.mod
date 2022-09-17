@@ -3,7 +3,7 @@ module github.com/zhiyunliu/glue-examples
 go 1.17
 
 require (
-	github.com/zhiyunliu/glue v0.1.21
+	github.com/zhiyunliu/glue v0.1.22
 	github.com/zhiyunliu/golibs v0.1.15
 )
 
@@ -120,4 +120,5 @@ require (
 )
 
 //replace github.com/zhiyunliu/glue => ../glue
+
 //replace github.com/zhiyunliu/golibs => ../golibs

@@ -13,7 +13,11 @@ import (
 )
 
 func main() {
-	rcpSrv := rpc.New("payserver")
+	rcpSrv := rpc.New("rpcserver", rpc.WithServiceName("rpcserver"))
+
+	rcpSrv.Handle("/demorpc", func(ctx context.Context) interface{} {
+		return "rpcserver"
+	})
 
 	rcpSrv.Handle("/demo", func(ctx context.Context) interface{} {
 
