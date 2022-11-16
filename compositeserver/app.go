@@ -33,7 +33,7 @@ func init() {
 	global.AppName = Name
 	srvOpt := gel.Server(
 		apiserver(),
-		mqcserver(),
+		//mqcserver(),
 		cronserver(),
 		rpcserver(),
 	)
@@ -65,6 +65,18 @@ func setTracerProvider(url string) error {
 
 func apiserver() transport.Server {
 	apiSrv := api.New("apiserver", api.WithServiceName("apiserver"), api.Log(log.WithRequest(), log.WithResponse()))
+
+	apiSrv.Handle("/manual", func(ctx context.Context) interface{} {
+		body, err := gel.RPC().Swap(ctx, "grpc://payment-rpc/rpc/paywithdraw/manual", xrpc.WithWaitForReady(false))
+		if err != nil {
+			ctx.Log().Error("gel.RPC().GetRPC().Swap:", err)
+		}
+		ctx.Log().Debug(string(body.GetResult()))
+		ctx.Log().Debug(body.GetHeader())
+		ctx.Log().Debug(body.GetStatus())
+		return nil
+	})
+
 	//	apiSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
 	apiSrv.Handle("/log", handles.NewLogDemo())
 	apiSrv.Handle("/xxx", func(ctx context.Context) interface{} {
@@ -111,7 +123,7 @@ func mqcserver() transport.Server {
 	//mqcSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
 
 	mqcSrv.Handle("/demomqc", func(ctx context.Context) interface{} {
-		ctx.Log().Debug("demomqc")
+		ctx.Log().Info(string(ctx.Request().Body().Bytes()))
 		body, err := gel.Http().Swap(ctx, "xhttp://apiserver/demoapi", xhttp.WithMethod(http.MethodPost))
 		if err != nil {
 			ctx.Log().Error("gel.Http().GetHttp().Swap:", err)
@@ -150,9 +162,12 @@ func cronserver() transport.Server {
 	cronSrv.Handle("/democron", func(ctx context.Context) interface{} {
 		ctx.Log().Debug("democron")
 
-		gel.Queue("default").Send(ctx.Context(), "xx.xx.xx", map[string]interface{}{
+		err := gel.Queue("streamredis").Send(ctx.Context(), "yy.xx.xx", map[string]interface{}{
 			"a": time.Now().Unix(),
 		})
+		if err != nil {
+			ctx.Log().Error("send:%+v", err)
+		}
 
 		return xtypes.XMap{
 			"a": 1,

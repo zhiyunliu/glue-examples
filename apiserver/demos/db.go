@@ -7,6 +7,7 @@ import (
 
 	gel "github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue/context"
+	"github.com/zhiyunliu/glue/xdb"
 )
 
 type DBdemo struct{}
@@ -225,4 +226,37 @@ func (d *DBdemo) SpHandle(ctx context.Context) interface{} {
 		"Error1":       err1,
 		"Error2":       err2,
 	}
+}
+
+func (d *DBdemo) StructHandle(ctx context.Context) interface{} {
+	dbobj := gel.DB("microsql")
+	p := struct {
+		Name   string     `json:"name" form:"name"`
+		Status *int       `json:"status" form:"status"`
+		Ctime  time.Time  `json:"time" form:"time" time_format:"2006-01-02 15:04:05"`
+		PCtime *time.Time `json:"ptime" form:"ptime" time_format:"2006-01-02 15:04:05"`
+	}{}
+
+	ctx.Bind(&p)
+
+	result, err := dbobj.Query(ctx.Context(), `
+	SELECT   [id]
+	,[name]
+	,[status]
+	,[x]
+FROM [dbo].[ljy_test] t
+where  name=@{name}  &{t.status} &{t.ctime}	xx
+	`, map[string]interface{}{
+		"status": p.Status,
+		"name":   p.Name,
+		"ctime":  p.PCtime,
+	})
+	if err != nil {
+		if dberr, ok := err.(xdb.DbError); ok {
+			ctx.Log().Error(dberr.SQL(), dberr.Args())
+			return result
+		}
+		ctx.Log().Error(err)
+	}
+	return result
 }

@@ -3,35 +3,21 @@ module github.com/zhiyunliu/glue-examples
 go 1.17
 
 require (
-	github.com/zhiyunliu/glue v0.1.22
-	github.com/zhiyunliu/golibs v0.1.15
+	github.com/zhiyunliu/glue v0.1.30
+	github.com/zhiyunliu/golibs v0.1.19
 )
 
+//replace github.com/zhiyunliu/glue => ../glue
+
+//replace github.com/zhiyunliu/golibs => ../golibs
+
 require (
-	github.com/AlecAivazis/survey/v2 v2.3.2 // indirect
-	github.com/Masterminds/goutils v1.1.1 // indirect
-	github.com/Masterminds/semver/v3 v3.1.1 // indirect
-	github.com/Masterminds/sprig/v3 v3.2.2 // indirect
-	github.com/andygrunwald/go-jira v1.14.0 // indirect
-	github.com/coreos/go-semver v0.3.0 // indirect
-	github.com/fatih/structs v1.1.0 // indirect
-	github.com/golang-jwt/jwt v3.2.1+incompatible // indirect
-	github.com/google/go-querystring v0.0.0-20170111101155-53e6ce116135 // indirect
-	github.com/huandu/xstrings v1.3.1 // indirect
-	github.com/kyokomi/emoji/v2 v2.2.8 // indirect
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
-	github.com/mitchellh/copystructure v1.0.0 // indirect
-	github.com/mitchellh/reflectwalk v1.0.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
 	github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
-	github.com/spf13/cast v1.3.1 // indirect
-	github.com/trivago/tgo v1.0.7 // indirect
-	github.com/urfave/cli/v2 v2.3.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
-	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
-	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 )
 
 require (
@@ -44,7 +30,6 @@ require (
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.8.1 // indirect
-	github.com/git-chglog/git-chglog v0.15.1 // indirect
 	github.com/go-errors/errors v1.4.2 // indirect
 	github.com/go-kratos/aegis v0.1.3 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
@@ -73,14 +58,11 @@ require (
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kardianos/service v1.2.1 // indirect
-	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/lib/pq v1.10.6 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/mattn/go-sqlite3 v1.14.15 // indirect
-	github.com/mattn/goveralls v0.0.11 // indirect
-	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -94,10 +76,9 @@ require (
 	github.com/shirou/gopsutil/v3 v3.22.8 // indirect
 	github.com/tklauser/go-sysconf v0.3.10 // indirect
 	github.com/tklauser/numcpus v0.5.0 // indirect
-	github.com/tsuyoshiwada/go-gitcmd v0.0.0-20180205145712-5f1f5f9475df // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/urfave/cli v1.22.9 // indirect
-	github.com/zhiyunliu/redisqueue/v2 v2.1.1 // indirect
+	github.com/zhiyunliu/redisqueue/v2 v2.1.2 // indirect
 	go.opentelemetry.io/otel v1.9.0
 	go.opentelemetry.io/otel/exporters/jaeger v1.9.0
 	go.opentelemetry.io/otel/sdk v1.9.0
@@ -109,7 +90,6 @@ require (
 	golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b // indirect
 	golang.org/x/sys v0.0.0-20220829200755-d48e67d00261 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	golang.org/x/tools v0.1.12 // indirect
 	google.golang.org/genproto v0.0.0-20200825200019-8632dd797987 // indirect
 	google.golang.org/grpc v1.49.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
@@ -118,7 +98,3 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-//replace github.com/zhiyunliu/glue => ../glue
-
-//replace github.com/zhiyunliu/golibs => ../golibs

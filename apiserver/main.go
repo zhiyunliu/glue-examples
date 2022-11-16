@@ -12,6 +12,8 @@ import (
 	_ "github.com/zhiyunliu/glue/contrib/registry/nacos"
 	_ "github.com/zhiyunliu/glue/contrib/xdb/mysql"
 
+	_ "github.com/zhiyunliu/glue/contrib/xhttp/http"
+
 	//_ "github.com/zhiyunliu/glue/contrib/xdb/oracle"
 	_ "github.com/zhiyunliu/glue/contrib/xdb/postgres"
 	_ "github.com/zhiyunliu/glue/contrib/xdb/sqlite"
@@ -20,8 +22,6 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/jaeger"
 	"go.opentelemetry.io/otel/sdk/resource"
-
-	"github.com/zhiyunliu/glue/middleware/ratelimit"
 
 	_ "github.com/zhiyunliu/glue/contrib/dlocker/redis"
 
@@ -58,13 +58,20 @@ func setTracerProvider(url string) error {
 }
 
 func main() {
-	setTracerProvider("http://127.0.0.1:14268/api/traces")
+	//setTracerProvider("http://127.0.0.1:14268/api/traces")
 
 	apiSrv := api.New("apiserver", api.WithServiceName("xxxx"))
 	//mqcSrv := mqc.New("bb")
 
 	apiSrv.Handle("/demo", func(ctx context.Context) interface{} {
 		ctx.Log().Debug("demo")
+
+		body, err := glue.Http().Request(ctx.Context(), "http://www.baidu.com", nil)
+		if err != nil {
+			ctx.Log().Error("request", err)
+		}
+		ctx.Log().Info("body:", string(body.GetResult()))
+
 		return xtypes.XMap{
 			"a": 1,
 			"b": 2,
@@ -89,7 +96,7 @@ func main() {
 	apiSrv.Handle("/dlock", demos.NewDLock())
 
 	//apiSrv.Use(jwt.Server(jwt.WithSecret("123456")))
-	apiSrv.Use(ratelimit.Server())
+	//apiSrv.Use(ratelimit.Server())
 	//apiSrv.Use(tracing.Server(tracing.WithTracerProvider(provider)))
 	//apiSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
 
