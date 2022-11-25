@@ -565,8 +565,6 @@ github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5t
 github.com/yusufpapurcu/wmi v1.2.2 h1:KBNDSne4vP5mbSWnJbO+51IMOXJB67QiYCSBrubbPRg=
 github.com/yusufpapurcu/wmi v1.2.2/go.mod h1:SBZ9tNy3G9/m5Oi98Zks0QjeHVDvuK0qfxQmPyzfmi0=
 github.com/zenazn/goji v0.9.0/go.mod h1:7S9M489iMyHBNxwZnk9/EHS098H4/F6TATF2mIxtB1Q=
-github.com/zhiyunliu/glue v0.1.30 h1:eCEBqtjTM6qSxigoIyp9HbExqMbWuK7vdR8AwwBt4ig=
-github.com/zhiyunliu/glue v0.1.30/go.mod h1:0H0XWqJvO6+vKFhEycjD26KzF5ai/03cdk3XoOoPSpI=
 github.com/zhiyunliu/golibs v0.1.19 h1:4zESRm3INuhGuyNfywKIT7kqAU6Zjy0TI7qCEO7qExU=
 github.com/zhiyunliu/golibs v0.1.19/go.mod h1:Nt6Zn6wQwUSBcaAauI9jyouZcPnPKXkZcfuo3cGTD/Y=
 github.com/zhiyunliu/redisqueue/v2 v2.1.2 h1:9roc1qhO5FuIRqwd2iyK2W3rr+xRduXFyBuPmadP9/k=

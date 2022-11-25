@@ -7,7 +7,7 @@ require (
 	github.com/zhiyunliu/golibs v0.1.19
 )
 
-//replace github.com/zhiyunliu/glue => ../glue
+replace github.com/zhiyunliu/glue => ../glue
 
 //replace github.com/zhiyunliu/golibs => ../golibs
 

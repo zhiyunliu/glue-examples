@@ -7,6 +7,7 @@ import (
 
 	gel "github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue/context"
+	"github.com/zhiyunliu/glue/log"
 	"github.com/zhiyunliu/glue/xdb"
 )
 
@@ -14,6 +15,20 @@ type DBdemo struct{}
 
 func NewDb() *DBdemo {
 	return &DBdemo{}
+}
+
+func init() {
+	xdb.RegistryLogger(&dblogger{})
+}
+
+type dblogger struct{}
+
+func (l *dblogger) Name() string {
+	return "default"
+}
+
+func (l *dblogger) Log(args ...interface{}) {
+	log.DefaultLogger.Warn(args...)
 }
 
 func (d *DBdemo) And1Handle(ctx context.Context) interface{} {
@@ -232,6 +247,7 @@ func (d *DBdemo) StructHandle(ctx context.Context) interface{} {
 	dbobj := gel.DB("microsql")
 	p := struct {
 		Name   string     `json:"name" form:"name"`
+		Sleep  int        `json:"sleep" form:"sleep"`
 		Status *int       `json:"status" form:"status"`
 		Ctime  time.Time  `json:"time" form:"time" time_format:"2006-01-02 15:04:05"`
 		PCtime *time.Time `json:"ptime" form:"ptime" time_format:"2006-01-02 15:04:05"`
@@ -240,20 +256,26 @@ func (d *DBdemo) StructHandle(ctx context.Context) interface{} {
 	ctx.Bind(&p)
 
 	result, err := dbobj.Query(ctx.Context(), `
+	if @{sleep} > 0 
+	begin 
+	  waitfor delay '00:00:${sleep}:00'
+	end  
+
 	SELECT   [id]
 	,[name]
 	,[status]
 	,[x]
 FROM [dbo].[ljy_test] t
-where  name=@{name}  &{t.status} &{t.ctime}	xx
+where  name=@{name}  &{t.status} &{t.ctime}	
 	`, map[string]interface{}{
+		"sleep":  p.Sleep,
 		"status": p.Status,
 		"name":   p.Name,
 		"ctime":  p.PCtime,
 	})
 	if err != nil {
 		if dberr, ok := err.(xdb.DbError); ok {
-			ctx.Log().Error(dberr.SQL(), dberr.Args())
+			ctx.Log().Error(err.Error(), dberr.SQL(), dberr.Args())
 			return result
 		}
 		ctx.Log().Error(err)
