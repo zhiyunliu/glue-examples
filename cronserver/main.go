@@ -6,6 +6,7 @@ import (
 	_ "github.com/zhiyunliu/glue/contrib/config/nacos"
 	_ "github.com/zhiyunliu/glue/contrib/dlocker/redis"
 	_ "github.com/zhiyunliu/glue/contrib/queue/redis"
+	_ "github.com/zhiyunliu/glue/contrib/queue/streamredis"
 	_ "github.com/zhiyunliu/glue/contrib/registry/nacos"
 	"github.com/zhiyunliu/glue/server/cron"
 )

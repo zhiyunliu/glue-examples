@@ -45,21 +45,7 @@
     "servers":{
 		"apiserver":{
 			"config":{"addr":":8080","status":"start","read_timeout":10,"write_timeout":10,"read_header_timeout":10,"max_header_bytes":65535}
-		},
-		"mqcserver":{
-			"config":{"addr":"queues://default","status":"start"},
-			"tasks":[{"queue":"xx.xx.xx","service":"/demomqc"}]
-		},
-		"rpcserver":{
-			"config":{"addr":":8081","status":"start","read_timeout":10,"connection_timeout":10,"max_recv_size":65535,"max_send_size":65535}
-		},
-		"cronserver":{
-			"config":{"status":"start","sharding":1},
-			"jobs":[
-				{"cron":"@every 1s","immediately":true,"service":"/democron"}			 
-			]
-			
-		}	
+		} 
 
     }
 }

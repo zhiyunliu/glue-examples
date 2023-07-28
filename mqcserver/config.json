@@ -18,12 +18,13 @@
 	},
 	"redis":{
 		"localhost":{
-			"addrs":["192.168.0.120:6379"],
-			"db":0,
+			"addrs":["192.168.3.27:6379"],
+			"password":"Xunyou2022",
+			"db":14,
 			"dial_timeout":10,
 			"read_timeout":10,
 			"write_timeout":10,
-			"pool_size":20
+			"pool_size":100
 		}
 	},
     "servers":{
@@ -33,11 +34,17 @@
 		},
 		"mqcserver_redis":{
 			"config":{"addr":"queues://redis","status":"start"},
-			"tasks":[{"queue":"redis"}]
+			"tasks":[
+				{"queue":"redis","concurrency":10},
+				{"queue":"redis2","concurrency":10}
+			]
 		},
 		"mqcserver_streamredis":{
 			"config":{"addr":"queues://streamredis","status":"start"},
-			"tasks":[{"queue":"streamredis"}]
+			"tasks":[
+				{"queue":"streamredis","concurrency":10},
+				{"queue":"streamredis2","concurrency":10}
+			]
 		}
     }
 }

@@ -34,8 +34,8 @@ func init() {
 	srvOpt := gel.Server(
 		apiserver(),
 		//mqcserver(),
-		cronserver(),
-		rpcserver(),
+		//cronserver(),
+		//rpcserver(),
 	)
 	opts = append(opts, srvOpt, gel.LogConcurrency(1))
 	//	setTracerProvider("http://127.0.0.1:14268/api/traces")

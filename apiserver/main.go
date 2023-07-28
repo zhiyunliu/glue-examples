@@ -14,7 +14,7 @@ import (
 
 	_ "github.com/zhiyunliu/glue/contrib/xhttp/http"
 
-	//_ "github.com/zhiyunliu/glue/contrib/xdb/oracle"
+	_ "github.com/zhiyunliu/glue/contrib/metrics/prometheus"
 	_ "github.com/zhiyunliu/glue/contrib/xdb/postgres"
 	_ "github.com/zhiyunliu/glue/contrib/xdb/sqlite"
 	_ "github.com/zhiyunliu/glue/contrib/xdb/sqlserver"
@@ -94,6 +94,9 @@ func main() {
 	apiSrv.Handle("/log", demos.NewLogDemo())
 	apiSrv.Handle("/rpc", demos.NewGrpcDemo())
 	apiSrv.Handle("/dlock", demos.NewDLock())
+	apiSrv.Handle("/ppp/:aaa/:bbb", func(ctx context.Context) interface{} {
+		return ctx.Request().Path().Params()
+	})
 
 	//apiSrv.Use(jwt.Server(jwt.WithSecret("123456")))
 	//apiSrv.Use(ratelimit.Server())
