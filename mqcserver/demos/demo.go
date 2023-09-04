@@ -1,7 +1,11 @@
 package demos
 
 import (
+	"database/sql"
+
+	"github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue/context"
+	"github.com/zhiyunliu/glue/xdb"
 )
 
 type Orgdemo struct{}
@@ -26,5 +30,36 @@ func (d *Orgdemo) Handle(ctx context.Context) interface{} {
 	// ctx.Request().Body().Scan(&mapData)
 	// ctx.Log().Infof("body-2:%+v", mapData)
 
+	dbObj := glue.DB("microsql")
+
+	rowData, err := dbObj.First(ctx.Context(), "select 2", nil)
+	if err != nil {
+		ctx.Log().Error(1, err)
+	}
+	ctx.Log().Info(rowData)
+	err = dbObj.Transaction(func(dbObj xdb.Executer) error {
+		var outaaa int
+		args := map[string]interface{}{
+			"a":   1001,
+			"aaa": sql.Named("aaa", sql.Out{Dest: &outaaa}),
+		}
+		trowData, err := dbObj.First(ctx.Context(), `
+		select  1 
+			
+		`, args)
+		if err != nil {
+			if dberr, ok := err.(xdb.DbError); ok {
+				ctx.Log().Error(dberr.SQL())
+				ctx.Log().Error(dberr.Args()...)
+			}
+
+			return err
+		}
+		ctx.Log().Info(3, trowData)
+		return nil
+	})
+	if err != nil {
+		ctx.Log().Error(2, err)
+	}
 	return "success"
 }

@@ -35,15 +35,15 @@
 		"mqcserver_redis":{
 			"config":{"addr":"queues://redis","status":"start"},
 			"tasks":[
-				{"queue":"redis","concurrency":10},
-				{"queue":"redis2","concurrency":10}
+				{"queue":"redis","concurrency":100},
+				{"queue":"redis2","concurrency":100}
 			]
 		},
 		"mqcserver_streamredis":{
 			"config":{"addr":"queues://streamredis","status":"start"},
 			"tasks":[
-				{"queue":"streamredis","concurrency":10},
-				{"queue":"streamredis2","concurrency":10}
+				{"queue":"streamredis","concurrency":1},
+				{"queue":"streamredis2","concurrency":1}
 			]
 		}
     }

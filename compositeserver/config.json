@@ -38,7 +38,7 @@
 		"default":{
 			"encrypt":false,
 			"client":{"namespace_id":""},
-			"server":[{"ipaddr":"localhost","port":8848}],
+			"server":[{"ipaddr":"192.168.3.27","port":8848}],
 			"options":{"prefix":"api","group":"charge","cluster":"grey","weight":100}
 		}
 	},

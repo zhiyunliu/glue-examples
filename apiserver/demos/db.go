@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	sctx "context"
+
 	gel "github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue/context"
 	"github.com/zhiyunliu/glue/log"
@@ -27,14 +29,14 @@ func (l *dblogger) Name() string {
 	return "default"
 }
 
-func (l *dblogger) Log(args ...interface{}) {
+func (l *dblogger) Log(ctx sctx.Context, elapsed int64, sql string, args ...interface{}) {
 	log.DefaultLogger.Warn(args...)
 }
 
 func (d *DBdemo) And1Handle(ctx context.Context) interface{} {
 	dbobj := gel.DB("microsql")
 	idval := ctx.Request().Query().Get("id")
-	sql := `select * from ljy_test where ctime > '2022-1-1' &{status}`
+	sql := `select b from ljy_test where ctime > '2022-1-1' &{status}`
 
 	rows, err := dbobj.Query(ctx.Context(), sql, map[string]interface{}{
 		"id":     idval,
@@ -256,15 +258,12 @@ func (d *DBdemo) StructHandle(ctx context.Context) interface{} {
 	ctx.Bind(&p)
 
 	result, err := dbobj.Query(ctx.Context(), `
-	if @{sleep} > 0 
-	begin 
-	  waitfor delay '00:00:${sleep}:00'
-	end  
-
+ 
 	SELECT   [id]
 	,[name]
 	,[status]
 	,[x]
+	,b
 FROM [dbo].[ljy_test] t
 where  name=@{name}  &{t.status} &{t.ctime}	
 	`, map[string]interface{}{
@@ -280,5 +279,6 @@ where  name=@{name}  &{t.status} &{t.ctime}
 		}
 		ctx.Log().Error(err)
 	}
+
 	return result
 }

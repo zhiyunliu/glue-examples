@@ -24,10 +24,8 @@
 			"config":{"status":"start","sharding":1},
 			"jobs":[
 		 
-				{"cron":"@every 1s","service":"/demo/mq","meta":{"qt":"redis","qn":"redis","cnt":"200"}},
-				{"cron":"@every 1s","service":"/demo/mq","meta":{"qt":"streamredis","qn":"streamredis","cnt":"200"}},
-				{"cron":"@every 1s","service":"/demo/mq","meta":{"qt":"redis","qn":"redis2","cnt":"400"}},
-				{"cron":"@every 1s","service":"/demo/mq","meta":{"qt":"streamredis","qn":"streamredis2","cnt":"400"}}
+
+				{"cron":"@every 1s","service":"/demo/mq","meta":{"qt":"streamredis","qn":"streamredis2","cnt":"1"}}
 				
 				]
 		}

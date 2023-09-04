@@ -10,6 +10,7 @@ import (
 	_ "github.com/zhiyunliu/glue/contrib/queue/redis"
 	_ "github.com/zhiyunliu/glue/contrib/queue/streamredis"
 	_ "github.com/zhiyunliu/glue/contrib/registry/nacos"
+	_ "github.com/zhiyunliu/glue/contrib/xdb/sqlserver"
 	"github.com/zhiyunliu/glue/server/api"
 	"github.com/zhiyunliu/glue/server/mqc"
 )

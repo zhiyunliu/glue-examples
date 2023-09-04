@@ -21,14 +21,8 @@ func (d *GrpcDemo) RequestHandle(ctx context.Context) interface{} {
 	wfrv, _ := strconv.ParseBool(wfr)
 
 	client := gel.RPC("default")
-	body, err := client.Request(ctx.Context(), "grpc://rpcserver/demo", map[string]interface{}{
-		"body-a": "1",
-		"body-b": 2,
-		"body-c": struct {
-			A string
-		}{
-			A: "s-1",
-		},
+	body, err := client.Request(ctx.Context(), "grpc://rpc-user-status/act-user-status/updatetag", map[string]interface{}{
+		
 	}, xrpc.WithXRequestID("aaa"), xrpc.WithWaitForReady(wfrv))
 	if err != nil {
 		ctx.Log().Error(err)
