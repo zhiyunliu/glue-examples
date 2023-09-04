@@ -44,7 +44,7 @@ func Refactor(opts ...Option) error {
 }
 
 func dbConfigRefactor(connName string, cfg *xdb.Config) (newcfg *xdb.Config, err error) {
-	//server=47.108.170.71;database=xunyou0725;persist security info=false;user id=xy;password=xycs_20211220;Min Pool Size=10;Max Pool Size=20
+	//server=127.0.0.1;database=test;user id=admin;password=test
 	conn := cfg.Conn
 	parties := strings.Split(conn, ";")
 	connMap := igcmap.New(map[string]interface{}{})
