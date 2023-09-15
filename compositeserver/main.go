@@ -1,7 +1,7 @@
 package main
 
 import (
-	gel "github.com/zhiyunliu/glue"
+	"github.com/zhiyunliu/glue"
 	_ "github.com/zhiyunliu/glue/contrib/cache/redis"
 	_ "github.com/zhiyunliu/glue/contrib/config/consul"
 	_ "github.com/zhiyunliu/glue/contrib/config/nacos"
@@ -19,11 +19,11 @@ import (
 )
 
 var (
-	opts = []gel.Option{gel.LogConcurrency(1)}
+	opts = []glue.Option{glue.LogConcurrency(1)}
 )
 
 func main() {
 
-	app := gel.NewApp(opts...)
+	app := glue.NewApp(opts...)
 	app.Start()
 }

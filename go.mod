@@ -5,13 +5,14 @@ go 1.18
 require (
 	github.com/zhiyunliu/glue v0.1.30
 	github.com/zhiyunliu/golibs v0.1.26
+	github.com/zhiyunliu/redisqueue/v2 v2.2.2 // indirect
 )
 
 replace github.com/zhiyunliu/glue => ../glue
 
 replace github.com/zhiyunliu/redisqueue/v2 => ../redisqueue
 
-//replace github.com/zhiyunliu/golibs => ../golibs
+replace github.com/zhiyunliu/golibs => ../golibs
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -94,7 +95,6 @@ require (
 	github.com/tklauser/numcpus v0.5.0 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	github.com/urfave/cli v1.22.9 // indirect
-	github.com/zhiyunliu/redisqueue/v2 v2.2.2 // indirect
 	go.opentelemetry.io/otel v1.9.0
 	go.opentelemetry.io/otel/exporters/jaeger v1.9.0
 	go.opentelemetry.io/otel/sdk v1.9.0

@@ -4,11 +4,12 @@ import (
 	"net/http"
 	"time"
 
-	gel "github.com/zhiyunliu/glue"
+	"github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue-examples/compositeserver/handles"
 	"github.com/zhiyunliu/glue/context"
 	"github.com/zhiyunliu/glue/global"
 	"github.com/zhiyunliu/glue/log"
+	"github.com/zhiyunliu/glue/queue"
 	"github.com/zhiyunliu/glue/transport"
 	"github.com/zhiyunliu/glue/xhttp"
 	"github.com/zhiyunliu/glue/xrpc"
@@ -31,13 +32,13 @@ var Name = "compositeserver"
 
 func init() {
 	global.AppName = Name
-	srvOpt := gel.Server(
+	srvOpt := glue.Server(
 		apiserver(),
-		//mqcserver(),
-		//cronserver(),
-		//rpcserver(),
+		mqcserver(),
+		cronserver(),
+		rpcserver(),
 	)
-	opts = append(opts, srvOpt, gel.LogConcurrency(1))
+	opts = append(opts, srvOpt, glue.LogConcurrency(1))
 	//	setTracerProvider("http://127.0.0.1:14268/api/traces")
 }
 
@@ -67,9 +68,9 @@ func apiserver() transport.Server {
 	apiSrv := api.New("apiserver", api.WithServiceName("apiserver"), api.Log(log.WithRequest(), log.WithResponse()))
 
 	apiSrv.Handle("/manual", func(ctx context.Context) interface{} {
-		body, err := gel.RPC().Swap(ctx, "grpc://payment-rpc/rpc/paywithdraw/manual", xrpc.WithWaitForReady(false))
+		body, err := glue.RPC().Swap(ctx, "grpc://payment-rpc/rpc/paywithdraw/manual", xrpc.WithWaitForReady(false))
 		if err != nil {
-			ctx.Log().Error("gel.RPC().GetRPC().Swap:", err)
+			ctx.Log().Error("glue.RPC().GetRPC().Swap:", err)
 		}
 		ctx.Log().Debug(string(body.GetResult()))
 		ctx.Log().Debug(body.GetHeader())
@@ -80,9 +81,9 @@ func apiserver() transport.Server {
 	//	apiSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
 	apiSrv.Handle("/log", handles.NewLogDemo())
 	apiSrv.Handle("/xxx", func(ctx context.Context) interface{} {
-		body, err := gel.Http().Swap(ctx, "http://192.168.1.155:8080/demoapi", xhttp.WithMethod(http.MethodPost))
+		body, err := glue.Http().Swap(ctx, "http://192.168.1.155:8080/demoapi", xhttp.WithMethod(http.MethodPost))
 		if err != nil {
-			ctx.Log().Error("gel.Http().GetHttp().Swap:", err)
+			ctx.Log().Error("glue.Http().GetHttp().xxx:", err)
 		}
 		ctx.Log().Debug(string(body.GetResult()))
 		ctx.Log().Debug(body.GetHeader())
@@ -90,9 +91,9 @@ func apiserver() transport.Server {
 		return string(body.GetResult())
 	})
 	apiSrv.Handle("/yyy", func(ctx context.Context) interface{} {
-		body, err := gel.Http().Swap(ctx, "xhttp://apiserver/demoapi", xhttp.WithMethod(http.MethodPost))
+		body, err := glue.Http().Swap(ctx, "xhttp://apiserver/demoapi", xhttp.WithMethod(http.MethodPost))
 		if err != nil {
-			ctx.Log().Error("gel.Http().GetHttp().Swap:", err)
+			ctx.Log().Error("glue.Http().GetHttp().yyy:", err)
 		}
 		ctx.Log().Debug(string(body.GetResult()))
 		ctx.Log().Debug(body.GetHeader())
@@ -102,13 +103,13 @@ func apiserver() transport.Server {
 	apiSrv.Handle("/demoapi", func(ctx context.Context) interface{} {
 		ctx.Log().Debug("api.demoapi")
 
-		body, err := gel.RPC().Swap(ctx, "grpc://rpcserver/demorpc", xrpc.WithWaitForReady(false))
+		body, err := glue.RPC().Swap(ctx, "grpc://rpcserver/demorpc", xrpc.WithWaitForReady(false))
 		if err != nil {
-			ctx.Log().Error("gel.RPC().GetRPC().Swap:", err)
+			ctx.Log().Error("glue.RPC().GetRPC().Swap:", err)
 		}
-		ctx.Log().Debug(string(body.GetResult()))
-		ctx.Log().Debug(body.GetHeader())
-		ctx.Log().Debug(body.GetStatus())
+		ctx.Log().Info(string(body.GetResult()))
+		ctx.Log().Info(body.GetHeader())
+		ctx.Log().Info(body.GetStatus())
 		//time.Sleep(time.Second)
 		return xtypes.XMap{
 			"a": 1,
@@ -124,9 +125,9 @@ func mqcserver() transport.Server {
 
 	mqcSrv.Handle("/demomqc", func(ctx context.Context) interface{} {
 		ctx.Log().Info(string(ctx.Request().Body().Bytes()))
-		body, err := gel.Http().Swap(ctx, "xhttp://apiserver/demoapi", xhttp.WithMethod(http.MethodPost))
+		body, err := glue.Http().Swap(ctx, "xhttp://apiserver/demoapi", xhttp.WithMethod(http.MethodPost))
 		if err != nil {
-			ctx.Log().Error("gel.Http().GetHttp().Swap:", err)
+			ctx.Log().Error("glue.Http().GetHttp().xhttp:", err)
 		}
 		ctx.Log().Debug(string(body.GetResult()))
 		ctx.Log().Debug(body.GetHeader())
@@ -146,7 +147,7 @@ func rpcserver() transport.Server {
 	//rpcSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
 	rpcSrv.Handle("/demorpc", func(ctx context.Context) interface{} {
 		//time.Sleep(time.Second * 1)
-		ctx.Log().Debug("demorpc")
+		ctx.Log().Info("demorpc")
 		return xtypes.XMap{
 			"a": 1,
 			"b": 2,
@@ -162,9 +163,11 @@ func cronserver() transport.Server {
 	cronSrv.Handle("/democron", func(ctx context.Context) interface{} {
 		ctx.Log().Debug("democron")
 
-		err := gel.Queue("streamredis").Send(ctx.Context(), "yy.xx.xx", map[string]interface{}{
+		msg, _ := queue.NewMsg(map[string]interface{}{
 			"a": time.Now().Unix(),
-		})
+		}, queue.WithXRequestID(ctx.Log().SessionID()))
+
+		err := glue.Queue("streamredis").Send(ctx.Context(), "yy.xx.xx", msg)
 		if err != nil {
 			ctx.Log().Error("send:%+v", err)
 		}
