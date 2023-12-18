@@ -5,8 +5,8 @@
 	},
 	"registry":"nacos://aliyun",	
  	"queues":{
-		"redis":{"proto":"redis","addr":"redis://localhost"},
-		"streamredis":{"proto":"streamredis","addr":"redis://localhost"}
+		"redis":{"proto":"redis","addr":"redis://localhost","enable_deadletter":true},
+		"streamredis":{"proto":"streamredis","addr":"redis://localhost","enable_deadletter":true}
 	},
 	"nacos":{
 		"aliyun":{
@@ -19,7 +19,7 @@
 	"redis":{
 		"localhost":{
 			"addrs":["192.168.3.27:6379"],
-			"password":"Xunyou2022",
+			"password":"",
 			"db":14,
 			"dial_timeout":10,
 			"read_timeout":10,

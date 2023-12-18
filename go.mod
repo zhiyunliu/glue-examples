@@ -3,8 +3,8 @@ module github.com/zhiyunliu/glue-examples
 go 1.18
 
 require (
-	github.com/zhiyunliu/glue v0.1.30
-	github.com/zhiyunliu/golibs v0.1.26
+	github.com/zhiyunliu/glue v0.2.6
+	github.com/zhiyunliu/golibs v0.1.28
 	github.com/zhiyunliu/redisqueue/v2 v2.2.2 // indirect
 )
 
@@ -13,6 +13,10 @@ replace github.com/zhiyunliu/glue => ../glue
 replace github.com/zhiyunliu/redisqueue/v2 => ../redisqueue
 
 replace github.com/zhiyunliu/golibs => ../golibs
+
+replace 192.168.1.27/microservice/common => ../../../192.168.1.27/microservice/common
+
+require golang.org/x/oauth2 v0.5.0
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -25,6 +29,7 @@ require (
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
 	github.com/microsoft/go-mssqldb v1.1.0 // indirect
+	github.com/nxadm/tail v1.4.11 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c // indirect
 	github.com/prometheus/client_golang v1.16.0 // indirect
@@ -36,6 +41,7 @@ require (
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	golang.org/x/arch v0.3.0 // indirect
 	golang.org/x/sync v0.2.0 // indirect
+	google.golang.org/appengine v1.6.7 // indirect
 )
 
 require (
@@ -44,7 +50,7 @@ require (
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/fatih/color v1.13.0 // indirect
-	github.com/fsnotify/fsnotify v1.5.4 // indirect
+	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.9.1 // indirect
 	github.com/go-errors/errors v1.4.2 // indirect
@@ -85,7 +91,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/nacos-group/nacos-sdk-go v1.1.2 // indirect
-	github.com/nxadm/tail v1.4.8 // indirect
 	github.com/orcaman/concurrent-map v1.0.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect

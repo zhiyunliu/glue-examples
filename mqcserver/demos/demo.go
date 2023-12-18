@@ -1,6 +1,8 @@
 package demos
 
 import (
+	"fmt"
+
 	"github.com/zhiyunliu/glue/context"
 )
 
@@ -26,5 +28,5 @@ func (d *Orgdemo) Handle(ctx context.Context) interface{} {
 	// ctx.Request().Body().Scan(&mapData)
 	// ctx.Log().Infof("body-2:%+v", mapData)
 
-	return "success"
+	return fmt.Errorf("xx")
 }

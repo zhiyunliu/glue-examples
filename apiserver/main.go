@@ -11,6 +11,8 @@ import (
 	_ "github.com/zhiyunliu/glue/contrib/queue/redis"
 	_ "github.com/zhiyunliu/glue/contrib/registry/nacos"
 	_ "github.com/zhiyunliu/glue/contrib/xdb/mysql"
+	"github.com/zhiyunliu/glue/contrib/xdb/tpl"
+	"github.com/zhiyunliu/glue/xdb"
 
 	_ "github.com/zhiyunliu/glue/contrib/xhttp/http"
 
@@ -57,8 +59,34 @@ func setTracerProvider(url string) error {
 	return nil
 }
 
+type symbol struct{}
+
+func (s *symbol) Name() string {
+	return "#"
+}
+func (s *symbol) GetPattern() string {
+	return `\#\{\w*[\.]?\w+\}`
+}
+func (s *symbol) Callback(input tpl.DBParam, fullKey string, item *tpl.ReplaceItem) (string, xdb.MissParamError) {
+	propName := tpl.GetPropName(fullKey)
+	if ph, ok := item.NameCache[propName]; ok {
+		return ph, nil
+	}
+	argName, value, err := input.Get(propName, item.Placeholder)
+	if err != nil {
+		return argName, err
+	}
+	item.Names = append(item.Names, propName)
+	item.Values = append(item.Values, value)
+
+	item.NameCache[propName] = argName
+	return argName, nil
+}
+
 func main() {
 	//setTracerProvider("http://127.0.0.1:14268/api/traces")
+
+	tpl.RegisterSymbol("sqlserver", &symbol{})
 
 	apiSrv := api.New("apiserver", api.WithServiceName("xxxx"))
 	//mqcSrv := mqc.New("bb")
@@ -66,7 +94,7 @@ func main() {
 	apiSrv.Handle("/demo", func(ctx context.Context) interface{} {
 		ctx.Log().Debug("demo")
 
-		body, err := glue.Http().Request(ctx.Context(), "http://www.baidu.com", nil)
+		body, err := glue.Http("").Request(ctx.Context(), "http://www.baidu.com", nil)
 		if err != nil {
 			ctx.Log().Error("request", err)
 		}

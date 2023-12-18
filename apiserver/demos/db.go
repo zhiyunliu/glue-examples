@@ -4,6 +4,8 @@ import (
 	sctx "context"
 	"database/sql"
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/zhiyunliu/glue"
@@ -92,7 +94,7 @@ func (d *DBdemo) Or2Handle(ctx context.Context) interface{} {
 }
 
 func (d *DBdemo) QueryHandle(ctx context.Context) interface{} {
-	dbobj := glue.DB("microsql")
+	dbobj := glue.DB("dev", xdb.WithMaxOpen(30))
 	idval := ctx.Request().Query().Get("id")
 	sql := `select * from ljy_test`
 
@@ -107,9 +109,71 @@ func (d *DBdemo) QueryHandle(ctx context.Context) interface{} {
 
 }
 
+func (d *DBdemo) ParamNotenoughHandle(ctx context.Context) interface{} {
+	dbobj := glue.DB("dev", xdb.WithMaxOpen(30))
+	sql := `select * from ljy_test where id=@{id} and name=@{name}`
+
+	dbParam := map[string]any{
+		"id": 1,
+	}
+
+	if ctx.Request().Query().Get("p") != "" {
+		dbParam["name"] = "aaa1"
+	}
+
+	rows, err := dbobj.Query(ctx.Context(), sql, dbParam)
+
+	if err != nil {
+		ctx.Log().Error(err)
+		if dberr, ok := err.(xdb.DbError); ok {
+			ctx.Log().Error(dberr.SQL())
+			ctx.Log().Error(dberr.Args()...)
+		}
+	}
+
+	return rows
+
+}
+
+func (d *DBdemo) PmHandle(ctx context.Context) interface{} {
+	dbobj := glue.DB("dev", xdb.WithMaxOpen(30))
+	sql := `select * from ljy_test`
+
+	rows, err := dbobj.Query(ctx.Context(), sql, nil)
+	if err != nil {
+		ctx.Log().Error(err)
+		if dberr, ok := err.(xdb.DbError); ok {
+			ctx.Log().Error(dberr.SQL())
+			ctx.Log().Error(dberr.Args()...)
+		}
+	}
+	return rows
+}
+
+func (d *DBdemo) PsHandle(ctx context.Context) interface{} {
+	dbobj := glue.DB("dev", xdb.WithMaxOpen(30))
+	sql := `select * from ljy_test`
+
+	type P struct {
+		Id int `json:"id"`
+	}
+
+	var p *P
+
+	rows, err := dbobj.Query(ctx.Context(), sql, p)
+	if err != nil {
+		ctx.Log().Error(err)
+		if dberr, ok := err.(xdb.DbError); ok {
+			ctx.Log().Error(dberr.SQL())
+			ctx.Log().Error(dberr.Args()...)
+		}
+	}
+	return rows
+}
+
 func (d *DBdemo) FirstHandle(ctx context.Context) interface{} {
-	dbobj := glue.DB("localhost")
-	row, err := dbobj.First(ctx.Context(), "select id,name from new_table t where t.id=@id", map[string]interface{}{
+	dbobj := glue.DB("dev")
+	row, err := dbobj.First(ctx.Context(), "select * from ljy_test ", map[string]interface{}{
 		"id": ctx.Request().Query().Get("id"),
 	})
 	if err != nil {
@@ -117,6 +181,146 @@ func (d *DBdemo) FirstHandle(ctx context.Context) interface{} {
 	}
 
 	return row
+
+}
+
+func (d *DBdemo) QueryAsMHandle(ctx context.Context) interface{} {
+	dbobj := glue.DB("dev", xdb.WithMaxOpen(30))
+	idval := ctx.Request().Query().Get("id")
+	sql := `select top 2 * from ljy_test`
+
+	results := &[]map[string]any{}
+
+	err := dbobj.QueryAs(ctx.Context(), sql, map[string]interface{}{
+		"id": idval,
+	}, results)
+	if err != nil {
+		ctx.Log().Error(err)
+	}
+
+	return results
+}
+
+func (d *DBdemo) QueryAsMPHandle(ctx context.Context) interface{} {
+	dbobj := glue.DB("dev", xdb.WithMaxOpen(30))
+	idval := ctx.Request().Query().Get("id")
+	sql := `select top 2 * from ljy_test  where id = #{id}`
+
+	results := &[]*map[string]any{}
+
+	err := dbobj.QueryAs(ctx.Context(), sql, map[string]interface{}{
+		"id": idval,
+	}, results)
+	if err != nil {
+		ctx.Log().Error(err)
+	}
+
+	return results
+}
+
+func (d *DBdemo) QueryAsSHandle(ctx context.Context) interface{} {
+	dbobj := glue.DB("dev", xdb.WithMaxOpen(30))
+	idval := ctx.Request().Query().Get("id")
+	sql := `select top 2 * from ljy_test`
+
+	results := &[]Test{}
+
+	err := dbobj.QueryAs(ctx.Context(), sql, map[string]interface{}{
+		"id": idval,
+	}, results)
+	if err != nil {
+		ctx.Log().Error(err)
+	}
+
+	return results
+}
+
+func (d *DBdemo) QueryAsSPHandle(ctx context.Context) interface{} {
+	dbobj := glue.DB("dev", xdb.WithMaxOpen(30))
+	idval := ctx.Request().Query().Get("id")
+	sql := `select top 2 * from ljy_test`
+
+	results := &[]*Test{}
+
+	err := dbobj.QueryAs(ctx.Context(), sql, map[string]interface{}{
+		"id": idval,
+	}, results)
+	if err != nil {
+		ctx.Log().Error(err)
+	}
+
+	return results
+}
+
+func (d *DBdemo) FirstAsHandle(ctx context.Context) interface{} {
+	dbobj := glue.DB("dev")
+	sql := `select * from ljy_test where id=@{id}`
+
+	// 定义一个 map 的指针
+	result := &map[string]any{}
+
+	var dbparam any
+	qt := ctx.Request().Query().Get("qt")
+	if qt == "s" {
+		dbparam = struct {
+			Id string `json:"id"`
+		}{
+			Id: ctx.Request().Query().Get("id"),
+		}
+	} else {
+		dbparam = map[string]interface{}{
+			"id": ctx.Request().Query().Get("id"),
+		}
+	}
+
+	err := dbobj.FirstAs(ctx.Context(), sql, dbparam, result)
+	if err != nil {
+		ctx.Log().Error(err)
+	}
+
+	return result
+
+}
+
+type Binary []byte
+
+func (b Binary) MarshalJSON() (bytes []byte, err error) {
+	builder := strings.Builder{}
+	for i := range b {
+		builder.WriteString(strconv.Itoa(int(b[i])) + ",")
+	}
+	return []byte(fmt.Sprintf(`"%s"`, builder.String())), nil
+}
+
+func (d *DBdemo) FirstAsStructHandle(ctx context.Context) interface{} {
+	dbobj := glue.DB("dev")
+	sql := `select * from ljy_test where id = @{id} order by id `
+
+	var result = &Test{}
+
+	err := dbobj.FirstAs(ctx.Context(), sql, map[string]interface{}{
+		"id": ctx.Request().Query().Get("id"),
+	}, result)
+	if err != nil {
+		ctx.Log().Error(err)
+	}
+
+	return result
+
+}
+
+func (d *DBdemo) ScalarHandle(ctx context.Context) interface{} {
+	dbobj := glue.DB("dev")
+	sql := `select * from ljy_test`
+
+	result, err := dbobj.Scalar(ctx.Context(), sql, map[string]interface{}{
+		"id": ctx.Request().Query().Get("id"),
+	})
+	if err != nil {
+		ctx.Log().Error(err)
+	}
+
+	return result
 
 }
 
@@ -282,4 +486,19 @@ where  name=@{name}  &{t.status} &{t.ctime}
 		ctx.Log().Error(err)
 	}
 	return result
+}
+
+type tmpErr struct {
+}
+
+func (e tmpErr) Error() string {
+	return "error"
+}
+
+func (e tmpErr) GetCode() int {
+	return 123
+}
+
+func (e tmpErr) GetMessage() string {
+	return "errormsg"
 }

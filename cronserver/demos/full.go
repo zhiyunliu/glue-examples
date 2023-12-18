@@ -1,10 +1,8 @@
 package demos
 
 import (
-	"strconv"
 	"time"
 
-	"github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue/context"
 )
 
@@ -27,21 +25,8 @@ func (d *Fulldemo) MqHandle(ctx context.Context) interface{} {
 
 	mapData := map[string]string{}
 	ctx.Request().Body().Scan(&mapData)
-
-	qt := mapData["qt"]
-	qn := mapData["qn"]
-	tmpcnt := mapData["cnt"]
-	cnt, _ := strconv.ParseInt(tmpcnt, 10, 32)
-	if cnt == 0 {
-		cnt = 10
-	}
-
-	ctx.Log().Infof("qt:%s,qn:%s", qt, qn)
-	for c := int64(0); c < cnt; c++ {
-		glue.Queue(qt).Send(ctx.Context(), qn, map[string]interface{}{
-			"send": time.Now().Unix(),
-		})
-	}
+	ctx.Log().Infof("header:%+v", ctx.Request().Header().Values())
+	time.Sleep(5 * time.Second)
 	return nil
 }
 

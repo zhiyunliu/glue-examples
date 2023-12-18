@@ -68,7 +68,7 @@ func apiserver() transport.Server {
 	apiSrv := api.New("apiserver", api.WithServiceName("apiserver"), api.Log(log.WithRequest(), log.WithResponse()))
 
 	apiSrv.Handle("/manual", func(ctx context.Context) interface{} {
-		body, err := glue.RPC().Swap(ctx, "grpc://payment-rpc/rpc/paywithdraw/manual", xrpc.WithWaitForReady(false))
+		body, err := glue.RPC("").Swap(ctx, "grpc://payment-rpc/rpc/paywithdraw/manual", xrpc.WithWaitForReady(false))
 		if err != nil {
 			ctx.Log().Error("glue.RPC().GetRPC().Swap:", err)
 		}
@@ -81,7 +81,7 @@ func apiserver() transport.Server {
 	//	apiSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
 	apiSrv.Handle("/log", handles.NewLogDemo())
 	apiSrv.Handle("/xxx", func(ctx context.Context) interface{} {
-		body, err := glue.Http().Swap(ctx, "http://192.168.1.155:8080/demoapi", xhttp.WithMethod(http.MethodPost))
+		body, err := glue.Http("").Swap(ctx, "http://192.168.1.155:8080/demoapi", xhttp.WithMethod(http.MethodPost))
 		if err != nil {
 			ctx.Log().Error("glue.Http().GetHttp().xxx:", err)
 		}
@@ -91,7 +91,7 @@ func apiserver() transport.Server {
 		return string(body.GetResult())
 	})
 	apiSrv.Handle("/yyy", func(ctx context.Context) interface{} {
-		body, err := glue.Http().Swap(ctx, "xhttp://apiserver/demoapi", xhttp.WithMethod(http.MethodPost))
+		body, err := glue.Http("").Swap(ctx, "xhttp://apiserver/demoapi", xhttp.WithMethod(http.MethodPost))
 		if err != nil {
 			ctx.Log().Error("glue.Http().GetHttp().yyy:", err)
 		}
@@ -103,7 +103,7 @@ func apiserver() transport.Server {
 	apiSrv.Handle("/demoapi", func(ctx context.Context) interface{} {
 		ctx.Log().Debug("api.demoapi")
 
-		body, err := glue.RPC().Swap(ctx, "grpc://rpcserver/demorpc", xrpc.WithWaitForReady(false))
+		body, err := glue.RPC("").Swap(ctx, "grpc://rpcserver/demorpc", xrpc.WithWaitForReady(false))
 		if err != nil {
 			ctx.Log().Error("glue.RPC().GetRPC().Swap:", err)
 		}
@@ -125,7 +125,7 @@ func mqcserver() transport.Server {
 
 	mqcSrv.Handle("/demomqc", func(ctx context.Context) interface{} {
 		ctx.Log().Info(string(ctx.Request().Body().Bytes()))
-		body, err := glue.Http().Swap(ctx, "xhttp://apiserver/demoapi", xhttp.WithMethod(http.MethodPost))
+		body, err := glue.Http("").Swap(ctx, "xhttp://apiserver/demoapi", xhttp.WithMethod(http.MethodPost))
 		if err != nil {
 			ctx.Log().Error("glue.Http().GetHttp().xhttp:", err)
 		}

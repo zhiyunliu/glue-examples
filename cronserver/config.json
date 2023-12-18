@@ -12,7 +12,7 @@
 		"localhost":{
 			"addrs":["192.168.3.27:6379"],
 			"db":14,
-			"password":"Xunyou2022",
+			"password":"",
 			"dial_timeout":10,
 			"read_timeout":10,
 			"write_timeout":10,
@@ -21,14 +21,9 @@
 	},
     "servers":{
 		"cronserver":{
-			"config":{"status":"start","sharding":1},
+			"config":{"status":"start"},
 			"jobs":[
-		 
-				{"cron":"@every 1s","service":"/demo/mq","meta":{"qt":"redis","qn":"redis","cnt":"200"}},
-				{"cron":"@every 1s","service":"/demo/mq","meta":{"qt":"streamredis","qn":"streamredis","cnt":"200"}},
-				{"cron":"@every 1s","service":"/demo/mq","meta":{"qt":"redis","qn":"redis2","cnt":"400"}},
-				{"cron":"@every 1s","service":"/demo/mq","meta":{"qt":"streamredis","qn":"streamredis2","cnt":"400"}}
-				
+				{"cron":"@every 10s","service":"/demo/mq","immediately":true,"monopoly":true,"meta":{"qt":"10","qn":"10","cnt":"200"}}
 				]
 		}
     }

@@ -11,7 +11,8 @@
 	"dlocker":"redis://localhost",
  	"dbs":{
 		"localhost":{"proto":"mysql","conn":"root:123456@tcp(localhost)/demo?charset=utf8","max_open":10,"max_idle":10,"life_time":100},
-		"microsql":{"debug":true, "show_query_log":true, "proto":"sqlserver","conn":"encrypt://1NEEJabhJBQQmcP3dGI6MJ5GmTSO0N+BjqEFzh84oU42Wg3W4bsTcsw0dyIpLs2STboxDE3p5UA9rrjw82WTDflX8ksnDVoIJTMC5sgrwAccR243mMsLroi+BVDNGpiKMkcS6hNXAMLai13J3D1PfOxby4UpLijODm1TqWoA+40NFq44rJxj7ei2qBVLfsuN","max_open":20,"max_idle":20,"life_time":600}
+		"microsql":{"debug":true, "show_query_log":true, "proto":"sqlserver","conn":"encrypt://1NEEJabhJBQQmcP3dGI6MJ5GmTSO0N+BjqEFzh84oU42Wg3W4bsTcsw0dyIpLs2STboxDE3p5UA9rrjw82WTDflX8ksnDVoIJTMC5sgrwAccR243mMsLroi+BVDNGpiKMkcS6hNXAMLai13J3D1PfOxby4UpLijODm1TqWoA+40NFq44rJxj7ei2qBVLfsuN","max_open":20,"max_idle":20,"life_time":600},
+		"dev":{"debug":true, "show_query_log":true, "proto":"sqlserver","conn":"server=127.0.0.1;uid=test;pwd=123;db=a","max_open":20,"max_idle":20,"life_time":600}
 	},
 	"rpcs":{
 		"default":{"proto":"grpc"}
@@ -40,7 +41,7 @@
 		"default":{
 			"encrypt":false,
 			"client":{"namespace_id":""},
-			"server":[{"ipaddr":"localhost","port":8848}],
+			"server":[{"ipaddr":"192.168.3.27","port":8848}],
 			"options":{"prefix":"api","group":"charge","cluster":"grey","weight":100}
 		}
 	},

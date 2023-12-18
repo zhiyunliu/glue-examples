@@ -1,9 +1,11 @@
 package demos
 
 import (
+	"strconv"
 	"time"
 
 	gel "github.com/zhiyunliu/glue"
+	"github.com/zhiyunliu/glue/cache"
 	"github.com/zhiyunliu/glue/context"
 )
 
@@ -14,7 +16,11 @@ func NewCache() *Cachedemo {
 }
 
 func (d *Cachedemo) GetHandle(ctx context.Context) interface{} {
-	cacheObj := gel.Cache("default")
+	tmpIdx := ctx.Request().Query().Get("idx")
+	idx, _ := strconv.ParseInt(tmpIdx, 10, 32)
+
+	cacheObj := gel.Cache("default", cache.WithDBIndex(int(idx)))
+
 	sctx := ctx.Context()
 	val, err := cacheObj.Get(sctx, "key")
 	return map[string]interface{}{
@@ -24,7 +30,11 @@ func (d *Cachedemo) GetHandle(ctx context.Context) interface{} {
 }
 
 func (d *Cachedemo) SetHandle(ctx context.Context) interface{} {
-	cacheObj := gel.Cache("default")
+
+	tmpIdx := ctx.Request().Query().Get("idx")
+	idx, _ := strconv.ParseInt(tmpIdx, 10, 32)
+
+	cacheObj := gel.Cache("default", cache.WithDBIndex(int(idx)))
 	err := cacheObj.Set(ctx.Context(), "key", time.Now().Nanosecond(), 10)
 
 	return map[string]interface{}{

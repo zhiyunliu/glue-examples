@@ -42,10 +42,65 @@
 			"options":{"prefix":"api","group":"charge","cluster":"grey","weight":100}
 		}
 	},
+	"prometheus":{
+		"counter":{
+			"namespace":"server",
+			"subsystem":"requests",
+			"name":"code_total",
+			"help":"The total number of processed requests",
+			"labels":["kind", "path", "code", "reason"]
+		},
+		"histogram":{
+			"namespace":"server",
+			"subsystem":"requests",
+			"name":"duration_sec",
+			"help":"server requests duration(sec)",
+			"buckets":[0.05, 0.1, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5],
+			"labels":["kind", "path"]
+		},
+		"gauge":{
+			"namespace":"server",
+			"subsystem":"requests",
+			"name":"cur_proc",
+			"help":"server current processing.",
+			"labels":["kind", "path"]
+		}
+	},
     "servers":{
 		"apiserver":{
 			"config":{"addr":":8080","status":"start","read_timeout":10,"write_timeout":10,"read_header_timeout":10,"max_header_bytes":65535}
-		} 
-
-    }
+		},
+		"mqcserver":{
+			"config":{"addr":"queues://streamredis","status":"start"},
+			"tasks":[{"queue":"yy.xx.xx","service":"/demomqc"}]
+		},
+		"rpcserver":{
+			"config":{"addr":":8081","status":"start","read_timeout":10,"connection_timeout":10,"max_recv_size":65535,"max_send_size":65535}
+		},
+		"cronserver":{
+			"config":{"status":"start","sharding":1},
+			"jobs":[
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":1}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":2}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":3}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":4}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":5}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":6}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":7}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":8}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":9}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":10}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":11}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":12}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":13}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":14}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":15}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":16}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":17}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":18}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":19}},			 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":20}}
+			]
+	    }
+	}
 }
