@@ -1,32 +1,30 @@
 package demos
 
 import (
-	"fmt"
-
+	"github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue/context"
+	"github.com/zhiyunliu/golibs/xtypes"
 )
 
 type Orgdemo struct{}
 
 func (d *Orgdemo) Handle(ctx context.Context) interface{} {
 
-	// time.Sleep(time.Second * 5)
+	param := xtypes.XMap{}
 
-	// ctx.Log().Infof("mqc.demo:%s", time.Now().Format("2006-01-02 15:04:05"))
+	if err := ctx.Request().Body().Scan(&param); err != nil {
+		ctx.Log().Error("scan", err)
+		return nil
+	}
+	cnt, _ := param.GetInt("cnt")
+	param["cnt"] = cnt + 1
+	if cnt > 5 {
+		return nil
+	}
 
-	// ctx.Log().Infof("header.a:%+v", ctx.Request().GetHeader("a"))
-	// time.Sleep(time.Millisecond * 200)
-	// ctx.Log().Infof("header.b:%+v", ctx.Request().GetHeader("b"))
-	// time.Sleep(time.Millisecond * 200)
-
-	// ctx.Log().Infof("header.c:%+v", ctx.Request().GetHeader("c"))
-	// time.Sleep(time.Millisecond * 200)
-
-	// ctx.Log().Infof("body-1:%s", ctx.Request().Body().Bytes())
-
-	// mapData := map[string]string{}
-	// ctx.Request().Body().Scan(&mapData)
-	// ctx.Log().Infof("body-2:%+v", mapData)
-
-	return fmt.Errorf("xx")
+	err := glue.Queue("streamredis").DelaySend(ctx.Context(), "streamredis3", param, 100)
+	if err != nil {
+		ctx.Log().Error("Orgdemo.err", err)
+	}
+	return nil
 }

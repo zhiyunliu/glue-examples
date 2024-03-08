@@ -3,8 +3,8 @@ module github.com/zhiyunliu/glue-examples
 go 1.18
 
 require (
-	github.com/zhiyunliu/glue v0.2.6
-	github.com/zhiyunliu/golibs v0.1.28
+	github.com/zhiyunliu/glue v0.4.5
+	github.com/zhiyunliu/golibs v0.1.34
 	github.com/zhiyunliu/redisqueue/v2 v2.2.2 // indirect
 )
 
@@ -16,7 +16,7 @@ replace github.com/zhiyunliu/golibs => ../golibs
 
 replace 192.168.1.27/microservice/common => ../../../192.168.1.27/microservice/common
 
-require golang.org/x/oauth2 v0.5.0
+require 192.168.1.27/microservice/common v0.0.0-00010101000000-000000000000
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -36,12 +36,12 @@ require (
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.42.0 // indirect
 	github.com/prometheus/procfs v0.10.1 // indirect
+	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/sync v0.2.0 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
+	golang.org/x/sync v0.3.0 // indirect
 )
 
 require (
@@ -50,7 +50,7 @@ require (
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/fatih/color v1.13.0 // indirect
-	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.9.1 // indirect
 	github.com/go-errors/errors v1.4.2 // indirect
@@ -90,7 +90,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/nacos-group/nacos-sdk-go v1.1.2 // indirect
+	github.com/nacos-group/nacos-sdk-go v1.1.4 // indirect
 	github.com/orcaman/concurrent-map v1.0.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect

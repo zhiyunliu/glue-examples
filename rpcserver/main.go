@@ -15,8 +15,21 @@ import (
 func main() {
 	rcpSrv := rpc.New("rpcserver", rpc.WithServiceName("rpcserver"))
 
+	rcpSrv.Handle("/swap", func(ctx context.Context) interface{} {
+
+		return "success"
+	})
+
 	rcpSrv.Handle("/demorpc", func(ctx context.Context) interface{} {
-		return "rpcserver"
+		result := struct {
+			A string `json:"a" form:"a" yml:"a" xml:"a" toml:"a"`
+			B string `json:"b" form:"b"  yml:"b"  xml:"b" toml:"b"`
+		}{}
+
+		if err := ctx.Bind(&result); err != nil {
+			return err.Error()
+		}
+		return result
 	})
 
 	rcpSrv.Handle("/demo", func(ctx context.Context) interface{} {

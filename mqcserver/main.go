@@ -24,6 +24,7 @@ func main() {
 
 		return glue.Queue(queueType).DelaySend(ctx.Context(), queueName, map[string]interface{}{
 			"delay": time.Now().Unix(),
+			"cnt":   1,
 		}, 10)
 	})
 

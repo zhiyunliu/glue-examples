@@ -43,7 +43,7 @@ func (d *GrpcDemo) RequestHandle(ctx context.Context) interface{} {
 
 func (d *GrpcDemo) SwapHandle(ctx context.Context) interface{} {
 	client := gel.RPC("")
-	body, err := client.Swap(ctx, "grpc://rpcserver/demo", xrpc.WithXRequestID("aaa"))
+	body, err := client.Swap(ctx, "grpc://rpcserver/demorpc", xrpc.WithXRequestID("aaa"))
 	if err != nil {
 		ctx.Log().Error(err)
 		return err

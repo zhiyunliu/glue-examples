@@ -163,7 +163,7 @@ func cronserver() transport.Server {
 	cronSrv.Handle("/democron", func(ctx context.Context) interface{} {
 		ctx.Log().Debug("democron")
 
-		msg, _ := queue.NewMsg(map[string]interface{}{
+		msg := queue.NewMsg(map[string]interface{}{
 			"a": time.Now().Unix(),
 		}, queue.WithXRequestID(ctx.Log().SessionID()))
 

@@ -12,6 +12,7 @@ import (
 	"github.com/zhiyunliu/glue/context"
 	"github.com/zhiyunliu/glue/log"
 	"github.com/zhiyunliu/glue/xdb"
+	"github.com/zhiyunliu/golibs/xtypes/datetime"
 )
 
 type DBdemo struct{}
@@ -152,7 +153,7 @@ func (d *DBdemo) PmHandle(ctx context.Context) interface{} {
 
 func (d *DBdemo) PsHandle(ctx context.Context) interface{} {
 	dbobj := glue.DB("dev", xdb.WithMaxOpen(30))
-	sql := `select * from ljy_test`
+	sql := `select * from ljy_test where id=@{id} `
 
 	type P struct {
 		Id int `json:"id"`
@@ -187,7 +188,7 @@ func (d *DBdemo) FirstHandle(ctx context.Context) interface{} {
 func (d *DBdemo) QueryAsMHandle(ctx context.Context) interface{} {
 	dbobj := glue.DB("dev", xdb.WithMaxOpen(30))
 	idval := ctx.Request().Query().Get("id")
-	sql := `select top 2 * from ljy_test`
+	sql := `select  * from ljy_test`
 
 	results := &[]map[string]any{}
 
@@ -204,7 +205,7 @@ func (d *DBdemo) QueryAsMHandle(ctx context.Context) interface{} {
 func (d *DBdemo) QueryAsMPHandle(ctx context.Context) interface{} {
 	dbobj := glue.DB("dev", xdb.WithMaxOpen(30))
 	idval := ctx.Request().Query().Get("id")
-	sql := `select top 2 * from ljy_test  where id = #{id}`
+	sql := `select  * from ljy_test  `
 
 	results := &[]*map[string]any{}
 
@@ -221,7 +222,7 @@ func (d *DBdemo) QueryAsMPHandle(ctx context.Context) interface{} {
 func (d *DBdemo) QueryAsSHandle(ctx context.Context) interface{} {
 	dbobj := glue.DB("dev", xdb.WithMaxOpen(30))
 	idval := ctx.Request().Query().Get("id")
-	sql := `select top 2 * from ljy_test`
+	sql := `select  * from ljy_test`
 
 	results := &[]Test{}
 
@@ -238,7 +239,7 @@ func (d *DBdemo) QueryAsSHandle(ctx context.Context) interface{} {
 func (d *DBdemo) QueryAsSPHandle(ctx context.Context) interface{} {
 	dbobj := glue.DB("dev", xdb.WithMaxOpen(30))
 	idval := ctx.Request().Query().Get("id")
-	sql := `select top 2 * from ljy_test`
+	sql := `select  * from ljy_test`
 
 	results := &[]*Test{}
 
@@ -449,13 +450,16 @@ func (d *DBdemo) SpHandle(ctx context.Context) interface{} {
 }
 
 func (d *DBdemo) StructHandle(ctx context.Context) interface{} {
-	dbobj := glue.DB("microsql")
+	dbobj := glue.DB("dev")
 	p := struct {
-		Name   string     `json:"name" form:"name"`
-		Sleep  int        `json:"sleep" form:"sleep"`
-		Status *int       `json:"status" form:"status"`
-		Ctime  time.Time  `json:"time" form:"time" time_format:"2006-01-02 15:04:05"`
-		PCtime *time.Time `json:"ptime" form:"ptime" time_format:"2006-01-02 15:04:05"`
+		Name         string             `json:"name" form:"name"`
+		Sleep        int                `json:"sleep" form:"sleep"`
+		Status       *int               `json:"status" form:"status"`
+		Ctime        datetime.DateTime  `json:"date" form:"date" time_format:"2006-01-02 15:04:05"`
+		PCtime       *datetime.DateTime `json:"datetime" form:"datetime" time_format:"2006-01-02 15:04:05"`
+		Nvarchar_max string             `json:"nvarchar_max" form:"nvarchar_max"`
+		Xmap         string             `json:"xmap" form:"xmap"`
+		Xmaps        string             `json:"xmaps" form:"xmaps"`
 	}{}
 
 	ctx.Bind(&p)
@@ -469,15 +473,9 @@ func (d *DBdemo) StructHandle(ctx context.Context) interface{} {
 	SELECT   [id]
 	,[name]
 	,[status]
-	,[x]
 FROM [dbo].[ljy_test] t
-where  name=@{name}  &{t.status} &{t.ctime}	
-	`, map[string]interface{}{
-		"sleep":  p.Sleep,
-		"status": p.Status,
-		"name":   p.Name,
-		"ctime":  p.PCtime,
-	})
+where  name=@{name}  &{t.status} &{t.date} &{t.datetime}	&{like %t.nvarchar_max} &{like t.xmap%} &{like %t.xmaps%}
+	`, p)
 	if err != nil {
 		if dberr, ok := err.(xdb.DbError); ok {
 			ctx.Log().Error(err.Error(), dberr.SQL(), dberr.Args())

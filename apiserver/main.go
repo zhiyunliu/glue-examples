@@ -67,8 +67,8 @@ func (s *symbol) Name() string {
 func (s *symbol) GetPattern() string {
 	return `\#\{\w*[\.]?\w+\}`
 }
-func (s *symbol) Callback(input tpl.DBParam, fullKey string, item *tpl.ReplaceItem) (string, xdb.MissParamError) {
-	propName := tpl.GetPropName(fullKey)
+func (s *symbol) Callback(input tpl.DBParam, fullKey string, item *tpl.ReplaceItem) (string, xdb.MissError) {
+	_, propName, _ := tpl.GetPropName(fullKey)
 	if ph, ok := item.NameCache[propName]; ok {
 		return ph, nil
 	}
