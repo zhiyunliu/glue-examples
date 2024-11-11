@@ -1,6 +1,7 @@
 package main
 
 import (
+	sctx "context"
 	"net/http"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/zhiyunliu/glue/context"
 	"github.com/zhiyunliu/glue/global"
 	"github.com/zhiyunliu/glue/log"
+	"github.com/zhiyunliu/glue/middleware/tracing"
 	"github.com/zhiyunliu/glue/queue"
 	"github.com/zhiyunliu/glue/transport"
 	"github.com/zhiyunliu/glue/xhttp"
@@ -22,7 +24,8 @@ import (
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/exporters/jaeger"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
@@ -38,14 +41,14 @@ func init() {
 		cronserver(),
 		rpcserver(),
 	)
-	opts = append(opts, srvOpt, glue.LogConcurrency(1))
-	//	setTracerProvider("http://127.0.0.1:14268/api/traces")
+	opts = append(opts, srvOpt)
+	setTracerProvider("127.0.0.1:14268")
 }
 
 // Set global trace provider
 func setTracerProvider(url string) error {
 	// Create the Jaeger exporter
-	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
+	exp, err := otlptracehttp.New(sctx.Background(), otlptracehttp.WithEndpoint(url))
 	if err != nil {
 		return err
 	}
@@ -78,7 +81,7 @@ func apiserver() transport.Server {
 		return nil
 	})
 
-	//	apiSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
+	apiSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
 	apiSrv.Handle("/log", handles.NewLogDemo())
 	apiSrv.Handle("/xxx", func(ctx context.Context) interface{} {
 		body, err := glue.Http("").Swap(ctx, "http://192.168.1.155:8080/demoapi", xhttp.WithMethod(http.MethodPost))
@@ -167,7 +170,7 @@ func cronserver() transport.Server {
 			"a": time.Now().Unix(),
 		}, queue.WithXRequestID(ctx.Log().SessionID()))
 
-		err := glue.Queue("streamredis").Send(ctx.Context(), "yy.xx.xx", msg)
+		err := glue.Queue("default").Send(ctx.Context(), "ayy.xx.xx", msg)
 		if err != nil {
 			ctx.Log().Error("send:%+v", err)
 		}

@@ -1,11 +1,8 @@
 package demos
 
 import (
-	"strconv"
-
 	gel "github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue/context"
-	"github.com/zhiyunliu/glue/queue"
 )
 
 type Queuedemo struct{}
@@ -30,10 +27,7 @@ func (d *Queuedemo) GetHandle(ctx context.Context) interface{} {
 func (d *Queuedemo) WithOptHandle(ctx context.Context) interface{} {
 	ctx.Log().Debug("Queuedemo.get")
 
-	tmpIdx := ctx.Request().Query().Get("idx")
-	idx, _ := strconv.ParseInt(tmpIdx, 10, 32)
-
-	queueObj := gel.Queue("default", queue.WithDBIndex(int(idx)))
+	queueObj := gel.Queue("default")
 
 	err := queueObj.Send(ctx.Context(), "key", map[string]interface{}{
 		"a": "1",

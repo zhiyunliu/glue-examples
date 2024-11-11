@@ -6,7 +6,9 @@
 	"registry":"nacos://aliyun",	
  	"queues":{
 		"redis":{"proto":"redis","addr":"redis://localhost","enable_deadletter":true},
-		"streamredis":{"proto":"streamredis","addr":"redis://localhost","enable_deadletter":true}
+		"streamredis":{"proto":"streamredis","addr":"redis://localhost","enable_deadletter":true},
+		"rabbitmq":{"proto":"rabbit","addr":"rabbit://dev"}
+
 	},
 	"nacos":{
 		"aliyun":{
@@ -19,7 +21,7 @@
 	"redis":{
 		"localhost":{
 			"addrs":["192.168.3.27:6379"],
-			"password":"",
+			"password":"xy",
 			"db":14,
 			"dial_timeout":10,
 			"read_timeout":10,
@@ -27,7 +29,13 @@
 			"pool_size":100
 		}
 	},
-    "servers":{
+	"rabbit":{
+		"dev":{
+			"addr":"amqp://guest:guest@192.168.3.27:5672",
+			"virtual_host":"/"
+		}
+	},
+	"servers":{
 		"apiserver":{
 			"config":{"addr":":8084","status":"start","read_timeout":10,"write_timeout":10,"read_header_timeout":10,"max_header_bytes":65535},
  			"header":{"a":"1","b":"2"}
@@ -45,6 +53,10 @@
 				{"queue":"streamredis","concurrency":10},
 				{"queue":"streamredis2","concurrency":10}
 			]
+		},
+		"rabbit":{
+			"config":{"addr":"queues://rabbitmq","status":"start"},
+			"tasks":[{"queue":"xy.rabbitmq"}]
 		}
     }
 }

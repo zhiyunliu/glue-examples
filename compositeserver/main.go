@@ -11,6 +11,8 @@ import (
 	_ "github.com/zhiyunliu/glue/contrib/xdb/mysql"
 	_ "github.com/zhiyunliu/glue/contrib/xdb/sqlite"
 	_ "github.com/zhiyunliu/glue/contrib/xdb/sqlserver"
+	_ "github.com/zhiyunliu/glue/contrib/xdb/xgorm"
+	"github.com/zhiyunliu/glue/log"
 
 	_ "github.com/zhiyunliu/glue/contrib/dlocker/redis"
 
@@ -19,7 +21,7 @@ import (
 )
 
 var (
-	opts = []glue.Option{glue.LogConcurrency(1)}
+	opts = []glue.Option{glue.LogParams(log.WithConcurrency(1))}
 )
 
 func main() {

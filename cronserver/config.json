@@ -19,12 +19,18 @@
 			"pool_size":20
 		}
 	},
+	"prometheus":{
+		"gateway":{
+			"addr":"http://localhost:9091"
+		}
+	},
     "servers":{
 		"cronserver":{
 			"config":{"status":"start"},
+			"middlewares":[{"name":"metrics","data":{"proto":"prometheus"}}],
 			"jobs":[
-				{"cron":"@every 10s","service":"/demo/mq","immediately":true,"monopoly":true,"meta":{"qt":"10","qn":"10","cnt":"200"}}
-				]
+				{"cron":"@every 10s","service":"/demo/mq","immediately":true, "meta":{"qt":"10","qn":"10","cnt":"200"}}
+			]
 		}
     }
 }

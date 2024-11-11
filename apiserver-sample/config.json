@@ -11,8 +11,8 @@
 	"nacos":{
 		"default":{
 			"encrypt":false,
-			"client":{"namespace_id":""},
-			"server":[{"ipaddr":"localhost","port":8848}],
+			"client":{"namespace_id":"d4742cc9-69c8-4dad-a814-f528e8d4476c","log_dir":"../log/nacos","cache_dir":"../etc/nacos"},
+			"server":[{"ipaddr":"192.168.3.27","port":8848}],
 			"options":{"prefix":"api","group":"","cluster":"","weight":100}
 		}
 	},

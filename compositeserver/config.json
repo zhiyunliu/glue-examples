@@ -22,7 +22,7 @@
 	},
 	"queues":{				 
 		"default":{"proto":"redis","addr":"redis://localhost"},
-		"streamredis":{"proto":"redis","addr":"redis://localhost"}
+		"streamredis":{"proto":"streamredis","addr":"redis://localhost"}
 	},
 	"redis":{
 		"localhost":{
@@ -72,8 +72,8 @@
 			"config":{"addr":":8080","status":"start"}
 		},
 		"mqcserver":{
-			"config":{"addr":"queues://streamredis","status":"start"},
-			"tasks":[{"queue":"yy.xx.xx","service":"/demomqc"}]
+			"config":{"addr":"queues://default","status":"start"},
+			"tasks":[{"queue":"ayy.xx.xx","service":"/demomqc"}]
 		},
 		"rpcserver":{
 			"config":{"addr":":8081","status":"start"}
@@ -81,7 +81,16 @@
 		"cronserver":{
 			"config":{"status":"start","sharding":1},
 			"jobs":[
-				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"a":1}} 
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"q":"xx:yy:zz","a":1}},
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"q":"xx:yy:zz","a":2}},
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"q":"xx:yy:zz","a":3}},
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"q":"xx:yy:zz","a":4}},
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"q":"xx:yy:zz","a":5}},
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"q":"xx:yy:zz","a":6}},
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"q":"xx:yy:zz","a":7}},
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"q":"xx:yy:zz","a":8}},
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"q":"xx:yy:zz","a":9}},
+				{"cron":"@every 1s","immediately":true,"service":"/democron","meta":{"q":"xx:yy:zz","a":10}}
 			]
 	    }
 	}

@@ -8,6 +8,7 @@ import (
 
 	"github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue/context"
+	"github.com/zhiyunliu/glue/engine"
 
 	// _ "github.com/zhiyunliu/glue/contrib/cache/redis"
 	// _ "github.com/zhiyunliu/glue/contrib/config/consul"
@@ -58,13 +59,26 @@ func main() {
 	})
 	apiSrv.Handle("/demo/struct", &demo{})
 	apiSrv.Handle("/api/demo/ttt", func(ctx context.Context) interface{} {
+
+		var a = interface{}(nil)
+		var b = a.(int)
+
 		return map[string]interface{}{
 			"a": "1",
+			"b": b,
 		}
 	})
 	apiSrv.Handle("/log", func(ctx context.Context) interface{} {
 		return xlog.Stats()
-	})
+	}, engine.MethodGet, engine.MethodPost, engine.WithExcludeLogReq())
+
+	var logcallback = func(ctx context.Context) any {
+		return xlog.Stats()
+	}
+
+	g1 := apiSrv.Group("/t")
+	g2 := g1.Group("/tt")
+	g2.Handle("/ttt", logcallback, engine.MethodGet, engine.MethodPost, engine.WithExcludeLogReq(), engine.WithExcludeLogResp())
 
 	app := glue.NewApp(glue.Server(apiSrv),
 		glue.StartedHook(func(ctx sctx.Context) error {
@@ -77,7 +91,7 @@ func main() {
 		glue.StartingHook(func(ctx sctx.Context) error {
 			log.Debug("global.Config.start:", global.Config)
 			return nil
-		}), glue.LogConcurrency(1))
+		}))
 	app.Start()
 }
 

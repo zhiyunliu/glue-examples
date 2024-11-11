@@ -14,6 +14,7 @@ func NewLogDemo() *Logdemo {
 }
 
 func (d *Logdemo) ConcurrencyHandle(ctx context.Context) interface{} {
+
 	cntVal := ctx.Request().Query().Get("cnt")
 	cnt, _ := strconv.Atoi(cntVal)
 	xlog.Concurrency(cnt)

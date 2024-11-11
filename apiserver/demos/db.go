@@ -312,7 +312,7 @@ func (d *DBdemo) FirstAsStructHandle(ctx context.Context) interface{} {
 
 func (d *DBdemo) ScalarHandle(ctx context.Context) interface{} {
 	dbobj := glue.DB("dev")
-	sql := `select * from ljy_test`
+	sql := `select * from test where id = @{id}`
 
 	result, err := dbobj.Scalar(ctx.Context(), sql, map[string]interface{}{
 		"id": ctx.Request().Query().Get("id"),
