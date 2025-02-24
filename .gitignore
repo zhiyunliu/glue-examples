@@ -19,3 +19,4 @@ logger.json
 *.log
 *.exe
 go.sum
+*.json

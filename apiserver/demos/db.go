@@ -283,6 +283,33 @@ func (d *DBdemo) FirstAsHandle(ctx context.Context) interface{} {
 
 }
 
+type TvpParam struct {
+	P1   string    `json:"p1"`
+	List []TvpItem `json:"list" xdb:"list,dbtype:tvp=utp_sup_stock_export"`
+}
+
+type TvpItem struct {
+	Stock_Id int `json:"stock_id"`
+}
+
+func (d *DBdemo) ExecTvpHandle(ctx context.Context) interface{} {
+	dbobj := glue.DB("dev")
+	sql := `insert into ljy_test(a,b) select @{p1}, [stock_id] from @{list}`
+
+	dbparam := &TvpParam{}
+
+	if err := ctx.Bind(&dbparam); err != nil {
+		return err
+	}
+
+	rest, err := dbobj.Exec(ctx.Context(), sql, dbparam)
+	if err != nil {
+		ctx.Log().Error(err)
+	}
+	efft, _ := rest.RowsAffected()
+	return efft
+}
+
 type Binary []byte
 
 func (b Binary) MarshalJSON() (bytes []byte, err error) {

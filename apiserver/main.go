@@ -94,6 +94,8 @@ func main() {
 	apiSrv.Handle("/log", demos.NewLogDemo())
 	apiSrv.Handle("/rpc", demos.NewGrpcDemo())
 	apiSrv.Handle("/dlock", demos.NewDLock())
+	apiSrv.Handle("/multipart", &demos.MultiDemo{})
+
 	apiSrv.Handle("/ppp/:aaa/:bbb", func(ctx context.Context) interface{} {
 		return ctx.Request().Path().Params()
 	})

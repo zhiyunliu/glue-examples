@@ -2,6 +2,8 @@ package main
 
 import (
 	sctx "context"
+	"encoding/json"
+	"mime/multipart"
 	"net/http"
 	"time"
 
@@ -42,7 +44,7 @@ func init() {
 		rpcserver(),
 	)
 	opts = append(opts, srvOpt)
-	setTracerProvider("127.0.0.1:14268")
+	//setTracerProvider("127.0.0.1:14268")
 }
 
 // Set global trace provider
@@ -119,6 +121,18 @@ func apiserver() transport.Server {
 			"b": 2,
 		}
 	})
+
+	apiSrv.Handle("/demofile", func(ctx context.Context) interface{} {
+		ctx.Log().Debug("api.demofile")
+
+		body, err := glue.RPC("").Swap(ctx, "grpc://rpcserver/demorpcfile", xrpc.WithWaitForReady(false))
+		if err != nil {
+			ctx.Log().Error("glue.RPC().GetRPC().Swap:", err)
+		}
+		//time.Sleep(time.Second)
+		return json.RawMessage(body.GetResult())
+	})
+
 	return apiSrv
 }
 
@@ -128,7 +142,10 @@ func mqcserver() transport.Server {
 
 	mqcSrv.Handle("/demomqc", func(ctx context.Context) interface{} {
 		ctx.Log().Info(string(ctx.Request().Body().Bytes()))
-		body, err := glue.Http("").Swap(ctx, "xhttp://apiserver/demoapi", xhttp.WithMethod(http.MethodPost))
+		body, err := glue.Http("").Swap(ctx, "xhttp://apiserver/demoapi", xhttp.WithMethod(http.MethodPost),
+			xhttp.WithRespHandler(func(resp *http.Response) (xhttp.Body, error) {
+				return xhttp.NewEmptyBody(), nil
+			}))
 		if err != nil {
 			ctx.Log().Error("glue.Http().GetHttp().xhttp:", err)
 		}
@@ -149,12 +166,21 @@ func rpcserver() transport.Server {
 	rpcSrv := rpc.New("rpcserver", rpc.WithServiceName("rpcserver"), rpc.Log(log.WithRequest(), log.WithResponse()))
 	//rpcSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
 	rpcSrv.Handle("/demorpc", func(ctx context.Context) interface{} {
-		//time.Sleep(time.Second * 1)
-		ctx.Log().Info("demorpc")
-		return xtypes.XMap{
-			"a": 1,
-			"b": 2,
+
+		return map[string]any{
+			"out":    "rpc",
+			"affect": "rpc.resp",
 		}
+
+	})
+
+	rpcSrv.Handle("/demorpcfile", func(ctx context.Context) interface{} {
+		var item = &DataItem{}
+		err := ctx.Bind(item)
+		if err != nil {
+			return err
+		}
+		return item
 	})
 
 	return rpcSrv
@@ -170,9 +196,18 @@ func cronserver() transport.Server {
 			"a": time.Now().Unix(),
 		}, queue.WithXRequestID(ctx.Log().SessionID()))
 
-		err := glue.Queue("default").Send(ctx.Context(), "ayy.xx.xx", msg)
+		bodyMap := xtypes.XMap{}
+		if err := ctx.Request().Body().Scan(&bodyMap); err != nil {
+			return err
+		}
+		queueName := bodyMap.GetString("queue_name")
+		if queueName == "" {
+			queueName = "default"
+		}
+
+		err := glue.Queue(queueName).Send(ctx.Context(), "ayy.xx.xx", msg)
 		if err != nil {
-			ctx.Log().Error("send:%+v", err)
+			ctx.Log().Errorf("send:%+v", err)
 		}
 
 		return xtypes.XMap{
@@ -181,4 +216,17 @@ func cronserver() transport.Server {
 		}
 	})
 	return cronSrv
+}
+func GetDbName(ctx context.Context) string {
+	dbName := ctx.Request().Query().Get("db_name")
+	if dbName == "" {
+		dbName = "xdb-mssql"
+	}
+	return dbName
+}
+
+type DataItem struct {
+	A        string                `json:"a" form:"a" xml:"a"`
+	B        int                   `json:"b" form:"b" xml:"b"`
+	TestFile *multipart.FileHeader `json:"testfile" form:"testfile"`
 }

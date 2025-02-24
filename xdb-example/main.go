@@ -45,10 +45,10 @@ func main() {
 	app.Start()
 }
 
-func appendCli() cli.Command {
+func appendCli() *cli.Command {
 	var matcher string
 
-	return cli.Command{
+	return &cli.Command{
 		Name: "matcher",
 		Flags: []cli.Flag{
 			&cli.StringFlag{

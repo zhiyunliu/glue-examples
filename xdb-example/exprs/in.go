@@ -3,6 +3,7 @@ package exprs
 import (
 	"strings"
 
+	mssql "github.com/microsoft/go-mssqldb"
 	"github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue/context"
 	"github.com/zhiyunliu/golibs/xtypes"
@@ -25,6 +26,8 @@ func (c *In) Handle(ctx context.Context) (res any) {
 			dataMap[k] = vals
 		}
 	}
+
+	dataMap["a"] = mssql.VarChar(dataMap.GetString("a"))
 
 	dbObj := glue.DB(GetDbName(ctx))
 	results, err := dbObj.Query(ctx.Context(), compare, dataMap)
