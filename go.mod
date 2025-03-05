@@ -3,7 +3,7 @@ module github.com/zhiyunliu/glue-examples
 go 1.22.1
 
 require (
-	github.com/zhiyunliu/glue v0.7.11
+	github.com/zhiyunliu/glue v0.7.13
 	github.com/zhiyunliu/golibs v0.3.3
 	github.com/zhiyunliu/stack v1.9.0 // indirect
 

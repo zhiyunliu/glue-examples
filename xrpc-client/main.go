@@ -92,6 +92,60 @@ func main() {
 		}
 	})
 
+	apiSrv.Handle("/stream/client-default-array", func(ctx context.Context) interface{} {
+		param := streamParams{}
+
+		if err := ctx.Bind(&param); err != nil {
+			return err
+		}
+
+		body, err := glue.RPC("").Request(ctx.Context(), "grpc://xrpc-server/client", param.List,
+			xrpc.WithXRequestID(ctx.Log().SessionID()),
+			xrpc.WithContentType(constants.ContentTypeApplicationJSON),
+			xrpc.WithMethod(http.MethodPost),
+			xrpc.WithStreamDefaultProcessor())
+
+		ctx.Log().Info("stream/client-default-array", string(body.GetResult()), err)
+
+		return body
+	})
+
+	apiSrv.Handle("/stream/client-default-implement", func(ctx context.Context) interface{} {
+		param := streamParams{}
+
+		if err := ctx.Bind(&param); err != nil {
+			return err
+		}
+
+		body, err := glue.RPC("").Request(ctx.Context(), "grpc://xrpc-server/client", param,
+			xrpc.WithXRequestID(ctx.Log().SessionID()),
+			xrpc.WithContentType(constants.ContentTypeApplicationJSON),
+			xrpc.WithMethod(http.MethodPost),
+			xrpc.WithStreamDefaultProcessor())
+
+		ctx.Log().Info("stream/client-default-implement", string(body.GetResult()), err)
+
+		return body
+	})
+
+	apiSrv.Handle("/stream/client-default-chan", func(ctx context.Context) interface{} {
+		param := streamParams{}
+
+		if err := ctx.Bind(&param); err != nil {
+			return err
+		}
+
+		body, err := glue.RPC("").Request(ctx.Context(), "grpc://xrpc-server/client", streamParamsChan(param),
+			xrpc.WithXRequestID(ctx.Log().SessionID()),
+			xrpc.WithContentType(constants.ContentTypeApplicationJSON),
+			xrpc.WithMethod(http.MethodPost),
+			xrpc.WithStreamDefaultProcessor())
+
+		ctx.Log().Info("stream/client-default-chan", string(body.GetResult()), err)
+
+		return body
+	})
+
 	apiSrv.Handle("/stream/client", func(ctx context.Context) interface{} {
 		param := streamParams{}
 
@@ -190,4 +244,25 @@ type streamParams struct {
 type Item struct {
 	Id   int
 	Name string
+}
+
+func (p streamParams) GetObjects() []any {
+	objs := make([]any, 0, len(p.List))
+	for _, item := range p.List {
+		objs = append(objs, item)
+	}
+	return objs
+}
+
+type streamParamsChan streamParams
+
+func (p streamParamsChan) GetObject() <-chan any {
+	ch := make(chan any, len(p.List))
+	go func() {
+		for _, item := range p.List {
+			ch <- item
+		}
+		close(ch)
+	}()
+	return ch
 }

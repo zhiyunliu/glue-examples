@@ -101,6 +101,34 @@ func main() {
 		}
 	})
 
+	rcpSrv.Handle("/client-default", func(ctx context.Context) interface{} {
+		ctx.Log().Info("stream client default start")
+		req := ctx.Request().GetImpl()
+		streamReq, ok := req.(xrpc.ClientStreamRequest)
+		if !ok {
+			return "invalid request"
+		}
+
+		errGroup := errgroup.Group{}
+
+		errGroup.Go(func() error {
+			for {
+				//异步接收数据流信息
+				item := &Item{}
+				if closed, err := streamReq.Recv(item); err != nil || closed {
+					return err
+				}
+				ctx.Log().Info("server.recv item", item)
+			}
+		})
+
+		err := errGroup.Wait()
+		ctx.Log().Info("stream client default end", err)
+		return map[string]any{
+			"default-client": "ok",
+		}
+	})
+
 	rcpSrv.Handle("/server", func(ctx context.Context) interface{} {
 		ctx.Log().Info("stream server start")
 
