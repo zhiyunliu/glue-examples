@@ -11,15 +11,11 @@ import (
 	_ "github.com/zhiyunliu/glue/contrib/config/nacos"
 	_ "github.com/zhiyunliu/glue/contrib/queue/redis"
 	_ "github.com/zhiyunliu/glue/contrib/registry/nacos"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/mysql"
 	"github.com/zhiyunliu/glue/xdb"
 
 	_ "github.com/zhiyunliu/glue/contrib/xhttp/http"
 
 	_ "github.com/zhiyunliu/glue/contrib/metrics/prometheus"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/postgres"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/sqlite"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/sqlserver"
 
 	"github.com/zhiyunliu/glue-examples/xdb-example/exprs"
 	"github.com/zhiyunliu/glue-examples/xdb-example/matchers"

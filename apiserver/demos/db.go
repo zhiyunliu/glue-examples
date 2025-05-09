@@ -31,7 +31,7 @@ func (l *dblogger) Name() string {
 	return "default"
 }
 
-func (l *dblogger) Log(ctx sctx.Context, elapsed int64, sql string, args ...interface{}) {
+func (l *dblogger) Log(ctx sctx.Context, elapsed int64, connName, sql string, args ...interface{}) {
 	log.DefaultLogger.Warn(args...)
 }
 

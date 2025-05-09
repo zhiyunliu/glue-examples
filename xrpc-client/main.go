@@ -1,6 +1,7 @@
 package main
 
 import (
+	sctx "context"
 	"net/http"
 
 	"github.com/zhiyunliu/glue"
@@ -48,7 +49,7 @@ func main() {
 
 		//调用grpc服务
 		result := []*Item{}
-		var processor xrpc.BidirectionalStreamProcessor = func(sc xrpc.BidirectionalStreamClient) error {
+		var processor xrpc.BidirectionalStreamProcessor = func(sctx sctx.Context, sc xrpc.BidirectionalStreamClient) error {
 			errGroup := errgroup.Group{}
 
 			ctx.Log().Info("grpc client start")
@@ -156,7 +157,7 @@ func main() {
 		errGroup := errgroup.Group{}
 		//调用grpc服务
 
-		var processor xrpc.ClientStreamProcessor = func(sc xrpc.ClientStreamClient) error {
+		var processor xrpc.ClientStreamProcessor = func(sctx sctx.Context, sc xrpc.ClientStreamClient) error {
 			ctx.Log().Info("grpc client start")
 
 			errGroup.Go(func() error {

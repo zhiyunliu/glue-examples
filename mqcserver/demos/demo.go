@@ -12,7 +12,7 @@ func (d *Orgdemo) Handle(ctx context.Context) interface{} {
 
 	param := xtypes.XMap{}
 
-	if err := ctx.Request().Body().Scan(&param); err != nil {
+	if err := ctx.Request().Body().ScanTo(&param); err != nil {
 		ctx.Log().Error("scan", err)
 		return nil
 	}

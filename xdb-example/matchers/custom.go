@@ -76,3 +76,6 @@ func (s *cusSymbol) Concat() string {
 func (s *cusSymbol) DynamicType() xdb.DynamicType {
 	return xdb.DynamicNone
 }
+func (s *cusSymbol) IsDynamic() bool {
+	return false
+}

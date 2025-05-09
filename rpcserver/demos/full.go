@@ -15,7 +15,7 @@ func (d *Fulldemo) Handle(ctx context.Context) interface{} {
 	time.Sleep(time.Millisecond * 200)
 
 	mapData := map[string]interface{}{}
-	ctx.Request().Body().Scan(&mapData)
+	ctx.Request().Body().ScanTo(&mapData)
 	ctx.Log().Infof("body-2:%+v", mapData)
 
 	return map[string]interface{}{
@@ -40,7 +40,7 @@ func (d *Fulldemo) NoneBodyHandle(ctx context.Context) interface{} {
 	time.Sleep(time.Millisecond * 200)
 
 	mapData := map[string]interface{}{}
-	ctx.Request().Body().Scan(&mapData)
+	ctx.Request().Body().ScanTo(&mapData)
 	ctx.Log().Infof("NoneBody-2:%+v", mapData)
 
 	return "success"
@@ -53,7 +53,7 @@ func (d *Fulldemo) NotRunHandle(ctx context.Context) interface{} {
 	time.Sleep(time.Millisecond * 200)
 
 	mapData := map[string]interface{}{}
-	ctx.Request().Body().Scan(&mapData)
+	ctx.Request().Body().ScanTo(&mapData)
 	ctx.Log().Infof("NoneBody-2:%+v", mapData)
 
 	return "success"

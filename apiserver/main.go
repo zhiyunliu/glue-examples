@@ -10,14 +10,11 @@ import (
 	_ "github.com/zhiyunliu/glue/contrib/config/nacos"
 	_ "github.com/zhiyunliu/glue/contrib/queue/redis"
 	_ "github.com/zhiyunliu/glue/contrib/registry/nacos"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/mysql"
 
 	_ "github.com/zhiyunliu/glue/contrib/xhttp/http"
 
 	_ "github.com/zhiyunliu/glue/contrib/metrics/prometheus"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/postgres"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/sqlite"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/sqlserver"
+
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/jaeger"

@@ -1,7 +1,6 @@
 package main
 
 import (
-	sctx "context"
 	"encoding/json"
 	"mime/multipart"
 	"net/http"
@@ -12,7 +11,6 @@ import (
 	"github.com/zhiyunliu/glue/context"
 	"github.com/zhiyunliu/glue/global"
 	"github.com/zhiyunliu/glue/log"
-	"github.com/zhiyunliu/glue/middleware/tracing"
 	"github.com/zhiyunliu/glue/queue"
 	"github.com/zhiyunliu/glue/transport"
 	"github.com/zhiyunliu/glue/xhttp"
@@ -23,14 +21,6 @@ import (
 	"github.com/zhiyunliu/glue/server/mqc"
 	"github.com/zhiyunliu/glue/server/rpc"
 	"github.com/zhiyunliu/golibs/xtypes"
-
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
-	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/sdk/resource"
-	tracesdk "go.opentelemetry.io/otel/sdk/trace"
-	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 )
 
 var Name = "compositeserver"
@@ -47,28 +37,6 @@ func init() {
 	//setTracerProvider("127.0.0.1:14268")
 }
 
-// Set global trace provider
-func setTracerProvider(url string) error {
-	// Create the Jaeger exporter
-	exp, err := otlptracehttp.New(sctx.Background(), otlptracehttp.WithEndpoint(url))
-	if err != nil {
-		return err
-	}
-	tp := tracesdk.NewTracerProvider(
-		// Set the sampling rate based on the parent span to 100%
-		tracesdk.WithSampler(tracesdk.ParentBased(tracesdk.AlwaysSample())),
-		// Always be sure to batch in production.
-		tracesdk.WithBatcher(exp),
-		// Record information about this application in an Resource.
-		tracesdk.WithResource(resource.NewSchemaless(
-			semconv.ServiceNameKey.String(Name),
-			attribute.String("env", "dev"),
-		)),
-	)
-	otel.SetTracerProvider(tp)
-	return nil
-}
-
 func apiserver() transport.Server {
 	apiSrv := api.New("apiserver", api.WithServiceName("apiserver"), api.Log(log.WithRequest(), log.WithResponse()))
 
@@ -83,7 +51,6 @@ func apiserver() transport.Server {
 		return nil
 	})
 
-	apiSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
 	apiSrv.Handle("/log", handles.NewLogDemo())
 	apiSrv.Handle("/xxx", func(ctx context.Context) interface{} {
 		body, err := glue.Http("").Swap(ctx, "http://192.168.1.155:8080/demoapi", xhttp.WithMethod(http.MethodPost))
@@ -197,7 +164,7 @@ func cronserver() transport.Server {
 		}, queue.WithXRequestID(ctx.Log().SessionID()))
 
 		bodyMap := xtypes.XMap{}
-		if err := ctx.Request().Body().Scan(&bodyMap); err != nil {
+		if err := ctx.Request().Body().ScanTo(&bodyMap); err != nil {
 			return err
 		}
 		queueName := bodyMap.GetString("queue_name")

@@ -8,11 +8,11 @@ import (
 	_ "github.com/zhiyunliu/glue/contrib/queue/redis"
 	_ "github.com/zhiyunliu/glue/contrib/queue/streamredis"
 	_ "github.com/zhiyunliu/glue/contrib/registry/nacos"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/mysql"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/sqlite"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/sqlserver"
-	_ "github.com/zhiyunliu/glue/contrib/xdb/xgorm"
 	"github.com/zhiyunliu/glue/log"
+	_ "github.com/zhiyunliu/xdb-gorm"
+	_ "github.com/zhiyunliu/xdb-mssql"
+	_ "github.com/zhiyunliu/xdb-mysql"
+	_ "github.com/zhiyunliu/xdb-sqlite"
 
 	_ "github.com/zhiyunliu/glue/contrib/dlocker/redis"
 
