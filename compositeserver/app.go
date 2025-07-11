@@ -75,18 +75,29 @@ func apiserver() transport.Server {
 	apiSrv.Handle("/demoapi", func(ctx context.Context) interface{} {
 		ctx.Log().Debug("api.demoapi")
 
-		body, err := glue.RPC("").Swap(ctx, "grpc://rpcserver/demorpc", xrpc.WithWaitForReady(false))
-		if err != nil {
-			ctx.Log().Error("glue.RPC().GetRPC().Swap:", err)
+		msg := queue.NewMsg(map[string]interface{}{
+			"a": time.Now().Unix(),
+		}, queue.WithXRequestID(ctx.Log().SessionID()))
+
+		bodyMap := xtypes.XMap{}
+		if err := ctx.Request().Body().ScanTo(&bodyMap); err != nil {
+			return err
 		}
-		ctx.Log().Info(string(body.GetResult()))
-		ctx.Log().Info(body.GetHeader())
-		ctx.Log().Info(body.GetStatus())
-		//time.Sleep(time.Second)
+		queueName := bodyMap.GetString("queue_name")
+		if queueName == "" {
+			queueName = "default"
+		}
+
+		err := glue.Queue(queueName).Send(ctx.Context(), "ayy.xx.xx", msg)
+		if err != nil {
+			ctx.Log().Errorf("send:%+v", err)
+		}
+
 		return xtypes.XMap{
 			"a": 1,
 			"b": 2,
 		}
+
 	})
 
 	apiSrv.Handle("/demofile", func(ctx context.Context) interface{} {
@@ -108,22 +119,20 @@ func mqcserver() transport.Server {
 	//mqcSrv.Use(tracing.Server(tracing.WithPropagator(propagation.TraceContext{}), tracing.WithTracerProvider(otel.GetTracerProvider())))
 
 	mqcSrv.Handle("/demomqc", func(ctx context.Context) interface{} {
-		ctx.Log().Info(string(ctx.Request().Body().Bytes()))
-		body, err := glue.Http("").Swap(ctx, "xhttp://apiserver/demoapi", xhttp.WithMethod(http.MethodPost),
-			xhttp.WithRespHandler(func(resp *http.Response) (xhttp.Body, error) {
-				return xhttp.NewEmptyBody(), nil
-			}))
+
+		body, err := glue.RPC("").Swap(ctx, "grpc://rpcserver/demorpc", xrpc.WithWaitForReady(false))
 		if err != nil {
-			ctx.Log().Error("glue.Http().GetHttp().xhttp:", err)
+			ctx.Log().Error("glue.RPC().GetRPC().Swap:", err)
 		}
-		ctx.Log().Debug(string(body.GetResult()))
-		ctx.Log().Debug(body.GetHeader())
-		ctx.Log().Debug(body.GetStatus())
-		//time.Sleep(time.Second * 2)
+		ctx.Log().Info(string(body.GetResult()))
+		ctx.Log().Info(body.GetHeader())
+		ctx.Log().Info(body.GetStatus())
+		//time.Sleep(time.Second)
 		return xtypes.XMap{
 			"a": 1,
 			"b": 2,
 		}
+
 	})
 
 	return mqcSrv
@@ -159,28 +168,23 @@ func cronserver() transport.Server {
 	cronSrv.Handle("/democron", func(ctx context.Context) interface{} {
 		ctx.Log().Debug("democron")
 
-		msg := queue.NewMsg(map[string]interface{}{
-			"a": time.Now().Unix(),
-		}, queue.WithXRequestID(ctx.Log().SessionID()))
-
-		bodyMap := xtypes.XMap{}
-		if err := ctx.Request().Body().ScanTo(&bodyMap); err != nil {
-			return err
-		}
-		queueName := bodyMap.GetString("queue_name")
-		if queueName == "" {
-			queueName = "default"
-		}
-
-		err := glue.Queue(queueName).Send(ctx.Context(), "ayy.xx.xx", msg)
+		ctx.Log().Info(string(ctx.Request().Body().Bytes()))
+		body, err := glue.Http("").Swap(ctx, "xhttp://apiserver/demoapi", xhttp.WithMethod(http.MethodPost),
+			xhttp.WithRespHandler(func(resp *http.Response) (xhttp.Body, error) {
+				return xhttp.NewEmptyBody(), nil
+			}))
 		if err != nil {
-			ctx.Log().Errorf("send:%+v", err)
+			ctx.Log().Error("glue.Http().GetHttp().xhttp:", err)
 		}
-
+		ctx.Log().Debug(string(body.GetResult()))
+		ctx.Log().Debug(body.GetHeader())
+		ctx.Log().Debug(body.GetStatus())
+		//time.Sleep(time.Second * 2)
 		return xtypes.XMap{
 			"a": 1,
 			"b": 2,
 		}
+
 	})
 	return cronSrv
 }

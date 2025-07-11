@@ -1,7 +1,6 @@
 package demos
 
 import (
-	"github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue/context"
 	"github.com/zhiyunliu/golibs/xtypes"
 )
@@ -21,10 +20,5 @@ func (d *Orgdemo) Handle(ctx context.Context) interface{} {
 	if cnt > 5 {
 		return nil
 	}
-
-	err := glue.Queue("streamredis").DelaySend(ctx.Context(), "streamredis3", param, 100)
-	if err != nil {
-		ctx.Log().Error("Orgdemo.err", err)
-	}
-	return nil
+	return param
 }

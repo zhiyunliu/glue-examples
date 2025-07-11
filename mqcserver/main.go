@@ -7,13 +7,11 @@ import (
 	"github.com/zhiyunliu/glue-examples/mqcserver/demos"
 	"github.com/zhiyunliu/glue/context"
 	_ "github.com/zhiyunliu/glue/contrib/config/nacos"
-	_ "github.com/zhiyunliu/glue/contrib/queue/rabbit"
-	_ "github.com/zhiyunliu/glue/contrib/queue/redis"
-	_ "github.com/zhiyunliu/glue/contrib/queue/streamredis"
 	_ "github.com/zhiyunliu/glue/contrib/registry/nacos"
 	"github.com/zhiyunliu/glue/server/api"
 	"github.com/zhiyunliu/glue/server/mqc"
-	"github.com/zhiyunliu/golibs/xtypes"
+	_ "github.com/zhiyunliu/queue-rabbitmq"
+	_ "github.com/zhiyunliu/queue-redis"
 )
 
 func main() {
@@ -47,14 +45,8 @@ func main() {
 	mqcSrv2.Handle("streamredis2", &demos.Orgdemo{})
 
 	rabbitSrv := mqc.New("rabbit")
+	mqcSrv1.Handle("xy.rabbitmq", &demos.Orgdemo{})
 
-	rabbitSrv.Handle("xy.rabbitmq", func(ctx context.Context) interface{} {
-		ctx.Log().Info(string(ctx.Request().Body().Bytes()))
-		//time.Sleep(time.Second * 2)
-		return xtypes.XMap{
-			"t": time.Now().Unix(),
-		}
-	})
 	app := glue.NewApp(glue.Server(apiSrv, mqcSrv1, mqcSrv2, rabbitSrv))
 
 	app.Start()
