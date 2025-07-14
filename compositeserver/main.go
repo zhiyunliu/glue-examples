@@ -3,16 +3,11 @@ package main
 import (
 	"github.com/zhiyunliu/glue"
 	_ "github.com/zhiyunliu/glue/contrib/cache/redis"
-	_ "github.com/zhiyunliu/glue/contrib/config/consul"
 	_ "github.com/zhiyunliu/glue/contrib/config/nacos"
 	_ "github.com/zhiyunliu/glue/contrib/queue/redis"
 	_ "github.com/zhiyunliu/glue/contrib/queue/streamredis"
 	_ "github.com/zhiyunliu/glue/contrib/registry/nacos"
 	"github.com/zhiyunliu/glue/log"
-	_ "github.com/zhiyunliu/xdb-gorm"
-	_ "github.com/zhiyunliu/xdb-mssql"
-	_ "github.com/zhiyunliu/xdb-mysql"
-	_ "github.com/zhiyunliu/xdb-sqlite"
 
 	_ "github.com/zhiyunliu/glue/contrib/dlocker/redis"
 
