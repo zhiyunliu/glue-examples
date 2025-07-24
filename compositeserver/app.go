@@ -9,6 +9,7 @@ import (
 	"github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue-examples/compositeserver/handles"
 	"github.com/zhiyunliu/glue/context"
+	"github.com/zhiyunliu/glue/engine"
 	"github.com/zhiyunliu/glue/global"
 	"github.com/zhiyunliu/glue/log"
 	"github.com/zhiyunliu/glue/queue"
@@ -114,7 +115,7 @@ func mqcserver() transport.Server {
 				return xhttp.NewEmptyBody(), nil
 			}))
 		if err != nil {
-			ctx.Log().Error("glue.Http().GetHttp().xhttp:", err)
+			ctx.Log().Error("mqcserver.xhttp:", err)
 		}
 		ctx.Log().Debug(string(body.GetResult()))
 		ctx.Log().Debug(body.GetHeader())
@@ -181,7 +182,7 @@ func cronserver() transport.Server {
 			"a": 1,
 			"b": 2,
 		}
-	})
+	}, engine.WithMandatoryLogReq(), engine.WithMandatoryLogResp())
 	return cronSrv
 }
 func GetDbName(ctx context.Context) string {

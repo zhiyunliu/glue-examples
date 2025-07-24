@@ -19,6 +19,6 @@ func main() {
 	mqcSrv.Handle("queue1", demos.NewMQC())
 	mqcSrv.Handle("yy.xx.xx", demos.NewMQC())
 
-	app := glue.NewApp(glue.Server(mqcSrv))
+	app := glue.NewApp(glue.Server(mqcSrv, apiSrv))
 	app.Start()
 }
