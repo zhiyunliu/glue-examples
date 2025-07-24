@@ -1,4 +1,4 @@
-module github.com/zhiyunliu/glue-examples/compositeserver
+module github.com/zhiyunliu/glue-examples/redisstream
 
 go 1.24.1
 
@@ -7,26 +7,17 @@ replace github.com/zhiyunliu/glue => ../../glue
 replace github.com/zhiyunliu/xdb-gorm => ../../xdb-gorm
 
 require (
-	github.com/zhiyunliu/glue v0.8.0-beta1
-	github.com/zhiyunliu/golibs v0.3.10
-	github.com/zhiyunliu/queue-rabbitmq v0.1.0
-	github.com/zhiyunliu/queue-redis v0.1.1
-	github.com/zhiyunliu/xdb-gorm v0.0.0-00010101000000-000000000000
-	github.com/zhiyunliu/xdb-mssql v0.0.0-20250506104636-b92697a12421
-	github.com/zhiyunliu/xdb-mysql v0.0.0-20250506104106-06da061ce9b2
-	github.com/zhiyunliu/xdb-sqlite v0.0.0-20250507020546-1a84e8c49771
-
 	github.com/zhiyunliu/alloter v0.2.0 // indirect
+	github.com/zhiyunliu/glue v0.8.0-beta1
+	github.com/zhiyunliu/golibs v0.3.10 // indirect
+	github.com/zhiyunliu/queue-redis v0.1.1
 	github.com/zhiyunliu/redisqueue/v3 v3.1.0 // indirect
 	github.com/zhiyunliu/stack v1.10.1 // indirect
 	github.com/zhiyunliu/xbinding v0.1.4 // indirect
 )
 
 require (
-	filippo.io/edwards25519 v1.1.0 // indirect
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1755 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/bytedance/sonic v1.12.10 // indirect
 	github.com/bytedance/sonic/loader v0.2.3 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
@@ -34,13 +25,11 @@ require (
 	github.com/cloudwego/base64x v0.1.5 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.6 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/emirpasic/gods/v2 v2.0.0-alpha // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
 	github.com/gin-contrib/pprof v1.4.0 // indirect
 	github.com/gin-contrib/sse v1.0.0 // indirect
 	github.com/gin-gonic/gin v1.10.0 // indirect
-	github.com/go-errors/errors v1.4.2 // indirect
 	github.com/go-kratos/aegis v0.1.3 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -48,26 +37,11 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.25.0 // indirect
-	github.com/go-sql-driver/mysql v1.9.2 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
-	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
-	github.com/golang-sql/sqlexp v0.1.0 // indirect
-	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.1 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
-	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
-	github.com/jackc/pgconn v1.13.0 // indirect
-	github.com/jackc/pgio v1.0.0 // indirect
-	github.com/jackc/pgpassfile v1.0.0 // indirect
-	github.com/jackc/pgproto3/v2 v2.3.1 // indirect
-	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
-	github.com/jackc/pgtype v1.12.0 // indirect
-	github.com/jackc/pgx/v4 v4.17.1 // indirect
-	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/jinzhu/now v1.1.5 // indirect
-	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kardianos/service v1.2.1 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
@@ -75,12 +49,9 @@ require (
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/lufia/plan9stats v0.0.0-20220913051719-115f729f3c8c // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/mattn/go-sqlite3 v1.14.28 // indirect
-	github.com/microsoft/go-mssqldb v1.8.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
-	github.com/nacos-group/nacos-sdk-go v1.1.5 // indirect
 	github.com/orcaman/concurrent-map/v2 v2.0.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -89,9 +60,7 @@ require (
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.62.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
-	github.com/rabbitmq/amqp091-go v1.10.0 // indirect
 	github.com/redis/go-redis/v9 v9.8.0 // indirect
-	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/shirou/gopsutil/v3 v3.22.8 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
@@ -112,8 +81,6 @@ require (
 	go.opentelemetry.io/otel/sdk/metric v1.35.0 // indirect
 	go.opentelemetry.io/otel/trace v1.35.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.5.0 // indirect
-	go.uber.org/multierr v1.11.0 // indirect
-	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/arch v0.14.0 // indirect
 	golang.org/x/crypto v0.36.0 // indirect
 	golang.org/x/net v0.37.0 // indirect
@@ -124,12 +91,5 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250218202821-56aae31c358a // indirect
 	google.golang.org/grpc v1.71.0 // indirect
 	google.golang.org/protobuf v1.36.5 // indirect
-	gopkg.in/ini.v1 v1.67.0 // indirect
-	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	gorm.io/driver/mysql v1.3.6 // indirect
-	gorm.io/driver/postgres v1.3.9 // indirect
-	gorm.io/driver/sqlite v1.5.3 // indirect
-	gorm.io/driver/sqlserver v1.5.1 // indirect
-	gorm.io/gorm v1.25.2-0.20230530020048-26663ab9bf55 // indirect
 )

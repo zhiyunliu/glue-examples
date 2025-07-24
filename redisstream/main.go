@@ -3,10 +3,11 @@ package main
 import (
 	"github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue-examples/redisstream/demos"
-	_ "github.com/zhiyunliu/glue/contrib/queue/redis"
-	_ "github.com/zhiyunliu/glue/contrib/queue/streamredis"
+	_ "github.com/zhiyunliu/glue/contrib/metrics/prometheus"
+
 	"github.com/zhiyunliu/glue/server/api"
 	"github.com/zhiyunliu/glue/server/mqc"
+	_ "github.com/zhiyunliu/queue-redis"
 )
 
 func main() {
@@ -19,6 +20,6 @@ func main() {
 	mqcSrv.Handle("queue1", demos.NewMQC())
 	mqcSrv.Handle("yy.xx.xx", demos.NewMQC())
 
-	app := glue.NewApp(glue.Server(mqcSrv))
+	app := glue.NewApp(glue.Server(mqcSrv, apiSrv))
 	app.Start()
 }

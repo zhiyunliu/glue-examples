@@ -45,7 +45,7 @@
 		},
 		"mqcserver":{
 			"config":{"addr":"queues://default","status":"start"},
-			"tasks":[{"queue":"ayy.xx.xx","service":"/demomqc"}]
+			"tasks":[{"queue":"ayy.xx.xx","service":"/demomqc","disable_retry":true}]
 		},
 		"rpcserver":{
 			"config":{"addr":":8081","status":"start"}
