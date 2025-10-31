@@ -3,15 +3,15 @@ module github.com/zhiyunliu/glue-examples/compositeserver
 go 1.24.1
 
 require (
-	github.com/zhiyunliu/alloter v0.1.0 // indirect
-	github.com/zhiyunliu/glue v0.7.18
-	github.com/zhiyunliu/golibs v0.3.8
-	github.com/zhiyunliu/redisqueue/v3 v3.1.0 // indirect
-	github.com/zhiyunliu/stack v1.9.0 // indirect
-	github.com/zhiyunliu/xbinding v0.1.3 // indirect
+	github.com/zhiyunliu/alloter v0.2.0 // indirect
+	github.com/zhiyunliu/glue v0.7.26
+	github.com/zhiyunliu/golibs v0.3.12
+	github.com/zhiyunliu/redisqueue/v3 v3.1.2 // indirect
+	github.com/zhiyunliu/stack v1.10.1 // indirect
+	github.com/zhiyunliu/xbinding v0.1.4 // indirect
 )
 
-replace github.com/zhiyunliu/glue => ../../glue
+//replace github.com/zhiyunliu/glue => ../../glue
 
 //replace github.com/zhiyunliu/redisqueue/v3 => ../../redisqueue
 
@@ -80,11 +80,11 @@ require (
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.23.0 // indirect
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/crypto v0.27.0 // indirect
-	golang.org/x/net v0.29.0 // indirect
-	golang.org/x/sync v0.11.0 // indirect
-	golang.org/x/sys v0.25.0 // indirect
-	golang.org/x/text v0.18.0 // indirect
+	golang.org/x/crypto v0.38.0 // indirect
+	golang.org/x/net v0.40.0 // indirect
+	golang.org/x/sync v0.14.0 // indirect
+	golang.org/x/sys v0.33.0 // indirect
+	golang.org/x/text v0.25.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240903143218-8af14fe29dc1 // indirect
 	google.golang.org/grpc v1.68.1 // indirect
 	google.golang.org/protobuf v1.35.2 // indirect

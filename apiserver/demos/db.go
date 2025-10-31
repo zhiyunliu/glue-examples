@@ -513,6 +513,37 @@ where  name=@{name}  &{t.status} &{t.date} &{t.datetime}	&{like %t.nvarchar_max}
 	return result
 }
 
+func (d *DBdemo) OutputHandle(ctx context.Context) interface{} {
+	dbobj := glue.DB("microsql")
+	type outputParam struct {
+		Id    int     `json:"id" form:"id"`
+		Name  string  `json:"name" form:"name" xdb:"name,dbtype:output"`
+		Name2 *string `json:"data" form:"data" xdb:"data,dbtype:output"`
+	}
+
+	p := &outputParam{}
+
+	if err := ctx.Bind(p); err != nil {
+		return err
+	}
+
+	result, err := dbobj.Exec(ctx.Context(), `
+
+select top 1 @{name} = t.b,@{data}=t.c from ljy_test(nolock) t 
+where t.id = @{id}
+	
+	`, p)
+	if err != nil {
+		if dberr, ok := err.(xdb.DbError); ok {
+			ctx.Log().Error(err.Error(), dberr.SQL(), dberr.Args())
+			return result
+		}
+		ctx.Log().Error(err)
+	}
+
+	return p
+}
+
 type tmpErr struct {
 }
 
