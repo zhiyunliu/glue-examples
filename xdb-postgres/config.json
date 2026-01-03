@@ -1,0 +1,38 @@
+{
+	"app": {
+		"mode": "release",
+		"ip_mask": "192.168"
+	},
+	"dbs": {
+		"xdb-postgres": {
+			"proto": "postgres",
+			"conn": "host={DB_POSTGRES_HOST} user={DB_POSTGRES_USER} password={DB_POSTGRES_PASSWORD} dbname=task_scheduling sslmode=disable",
+			"max_open": 10,
+			"max_idle": 10,
+			"life_time": 100
+		} 
+	},
+	"servers": {
+		"apiserver": {
+			"config": {
+				"addr": ":8083",
+				"status": "start",
+				"read_timeout": 120,
+				"write_timeout": 120,
+				"read_header_timeout": 120
+			},
+			"middlewares": [
+				{
+					"name": "metrics",
+					"data": {
+						"proto": "prometheus"
+					}
+				}
+			],
+			"header": {
+				"a": "1",
+				"b": "2"
+			}
+		}
+	}
+}
