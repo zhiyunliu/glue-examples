@@ -9,13 +9,15 @@ import (
 	"github.com/zhiyunliu/glue"
 	_ "github.com/zhiyunliu/glue/contrib/cache/redis"
 	_ "github.com/zhiyunliu/glue/contrib/config/nacos"
-	_ "github.com/zhiyunliu/glue/contrib/queue/redis"
+
 	_ "github.com/zhiyunliu/glue/contrib/registry/nacos"
 	"github.com/zhiyunliu/glue/xdb"
 
 	_ "github.com/zhiyunliu/glue/contrib/xhttp/http"
 
 	_ "github.com/zhiyunliu/glue/contrib/metrics/prometheus"
+
+	_ "github.com/zhiyunliu/queue-redis"
 
 	"github.com/zhiyunliu/glue-examples/xdb-example/exprs"
 	"github.com/zhiyunliu/glue-examples/xdb-example/matchers"

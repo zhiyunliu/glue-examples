@@ -20,3 +20,5 @@ logger.json
 *.exe
 go.sum
 *.json
+
+conf/

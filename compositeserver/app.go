@@ -75,7 +75,7 @@ func apiserver() transport.Server {
 	apiSrv.Handle("/demoapi", func(ctx context.Context) interface{} {
 		ctx.Log().Debug("api.demoapi")
 
-		msg := queue.NewMsg(map[string]interface{}{
+		msg, err := queue.NewMsg(map[string]interface{}{
 			"a": time.Now().Unix(),
 		}, queue.WithXRequestID(ctx.Log().SessionID()))
 
@@ -88,7 +88,7 @@ func apiserver() transport.Server {
 			queueName = "default"
 		}
 
-		err := glue.Queue(queueName).Send(ctx.Context(), "ayy.xx.xx", msg)
+		err = glue.Queue(queueName).Send(ctx.Context(), "ayy.xx.xx", msg)
 		if err != nil {
 			ctx.Log().Errorf("send:%+v", err)
 		}
@@ -187,13 +187,6 @@ func cronserver() transport.Server {
 
 	})
 	return cronSrv
-}
-func GetDbName(ctx context.Context) string {
-	dbName := ctx.Request().Query().Get("db_name")
-	if dbName == "" {
-		dbName = "xdb-mssql"
-	}
-	return dbName
 }
 
 type DataItem struct {

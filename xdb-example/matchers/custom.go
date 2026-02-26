@@ -38,7 +38,7 @@ func (m *CustomMatcher) GetOperatorMap() xdb.OperatorMap {
 	return xdb.NewOperatorMap(
 		xdb.NewOperator("=", func(valuer xdb.ExpressionValuer, param xdb.DBParam, phName string, value any) string {
 			return fmt.Sprintf("%s=%s", valuer.GetFullfield(), phName)
-		}),
+		}, nil),
 	)
 }
 

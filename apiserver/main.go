@@ -6,53 +6,26 @@ import (
 	"github.com/zhiyunliu/glue"
 	"github.com/zhiyunliu/glue/context"
 	_ "github.com/zhiyunliu/glue/contrib/cache/redis"
-	_ "github.com/zhiyunliu/glue/contrib/config/consul"
 	_ "github.com/zhiyunliu/glue/contrib/config/nacos"
-	_ "github.com/zhiyunliu/glue/contrib/queue/redis"
 	_ "github.com/zhiyunliu/glue/contrib/registry/nacos"
+	_ "github.com/zhiyunliu/queue-redis"
 
 	_ "github.com/zhiyunliu/glue/contrib/xhttp/http"
 
 	_ "github.com/zhiyunliu/glue/contrib/metrics/prometheus"
 
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/exporters/jaeger"
-	"go.opentelemetry.io/otel/sdk/resource"
-
 	_ "github.com/zhiyunliu/glue/contrib/dlocker/redis"
+	_ "github.com/zhiyunliu/xdb-mssql"
 
 	"github.com/zhiyunliu/glue-examples/apiserver/demos"
 	"github.com/zhiyunliu/glue/errors"
 	"github.com/zhiyunliu/glue/server/api"
 	"github.com/zhiyunliu/golibs/xtypes"
-	tracesdk "go.opentelemetry.io/otel/sdk/trace"
-	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 )
 
 var Name = "apiserver"
 
 // Set global trace provider
-func setTracerProvider(url string) error {
-	// Create the Jaeger exporter
-	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
-	if err != nil {
-		return err
-	}
-	tp := tracesdk.NewTracerProvider(
-		// Set the sampling rate based on the parent span to 100%
-		tracesdk.WithSampler(tracesdk.ParentBased(tracesdk.AlwaysSample())),
-		// Always be sure to batch in production.
-		tracesdk.WithBatcher(exp),
-		// Record information about this application in an Resource.
-		tracesdk.WithResource(resource.NewSchemaless(
-			semconv.ServiceNameKey.String(Name),
-			attribute.String("env", "dev"),
-		)),
-	)
-	otel.SetTracerProvider(tp)
-	return nil
-}
 
 func main() {
 	//setTracerProvider("http://127.0.0.1:14268/api/traces")

@@ -7,14 +7,14 @@
 	"dbs": {
 		"xdb-mysql": {
 			"proto": "mysql",
-			"conn": "root:123456@tcp(localhost)/demo?charset=utf8",
+			"conn": "{DB_USER_NAME}:{DB_USER_PWD}@tcp(localhost)/demo?charset=utf8",
 			"max_open": 10,
 			"max_idle": 10,
 			"life_time": 100
 		},
 		"xdb-mssql": {
 			"proto": "mssql",
-			"conn":"server=env-test;database=testdb;persist security info=false;user id=xy;password=abc123;Min Pool Size=5;Max Pool Size=20;",
+			"conn":"server=env-test;database={DB_DATABASE};persist security info=false;user id={DB_USER_NAME};password={DB_USER_PWD};Min Pool Size=5;Max Pool Size=20;",
 			"max_open": 20,
 			"max_idle": 20,
 			"life_time": 600
@@ -42,5 +42,10 @@
 				"b": "2"
 			}
 		}
+	},
+	"opentelemetry":{
+		"insecure":true,
+		"trace_endpoint":"http://192.168.1.155:4318",
+		"trace_sample_rate":100
 	}
 }
