@@ -18,6 +18,7 @@ import (
 	_ "github.com/zhiyunliu/glue/contrib/metrics/prometheus"
 
 	_ "github.com/zhiyunliu/queue-redis"
+	_ "github.com/zhiyunliu/xdb-mssql"
 
 	"github.com/zhiyunliu/glue-examples/xdb-example/exprs"
 	"github.com/zhiyunliu/glue-examples/xdb-example/matchers"

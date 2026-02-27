@@ -6,6 +6,7 @@ import (
 	_ "github.com/zhiyunliu/glue/contrib/config/nacos"
 	_ "github.com/zhiyunliu/glue/contrib/metrics/prometheus"
 	_ "github.com/zhiyunliu/glue/contrib/registry/nacos"
+	"github.com/zhiyunliu/glue/global"
 	"github.com/zhiyunliu/glue/log"
 	_ "github.com/zhiyunliu/queue-rabbitmq"
 	_ "github.com/zhiyunliu/queue-redis"
@@ -24,7 +25,7 @@ var (
 )
 
 func main() {
-
+	global.AppName = "compositeserver"
 	app := glue.NewApp(opts...)
 	app.Start()
 }
