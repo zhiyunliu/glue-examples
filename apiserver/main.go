@@ -15,6 +15,7 @@ import (
 	_ "github.com/zhiyunliu/glue/contrib/metrics/prometheus"
 
 	_ "github.com/zhiyunliu/glue/contrib/dlocker/redis"
+	_ "github.com/zhiyunliu/xdb-mongodb"
 	_ "github.com/zhiyunliu/xdb-mssql"
 
 	"github.com/zhiyunliu/glue-examples/apiserver/demos"

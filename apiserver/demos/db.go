@@ -12,7 +12,10 @@ import (
 	"github.com/zhiyunliu/glue/context"
 	"github.com/zhiyunliu/glue/log"
 	"github.com/zhiyunliu/glue/xdb"
+	"github.com/zhiyunliu/golibs/xsse"
 	"github.com/zhiyunliu/golibs/xtypes/datetime"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type DBdemo struct{}
@@ -511,6 +514,43 @@ where  name=@{name}  &{t.status} &{t.date} &{t.datetime}	&{like %t.nvarchar_max}
 		ctx.Log().Error(err)
 	}
 	return result
+}
+
+func (d *DBdemo) MongoHandle(ctx context.Context) interface{} {
+	dbObj := glue.DB("mgodbprofile")
+
+	mongodb := dbObj.GetImpl().(*mongo.Database)
+	collection := mongodb.Collection("test_profile")
+	filter := bson.M{"age": 24}
+	findResult := map[string]any{}
+	err := collection.FindOne(ctx.Context(), filter).Decode(&findResult)
+	if err != nil {
+		return err
+	}
+
+	return findResult
+}
+
+func (d *DBdemo) Stream2Handle(ctx context.Context) any {
+	type dataItem struct {
+		Id   int64  `json:"id"`
+		Name string `json:"name"`
+	}
+
+	const SQL = `select top 10 id, name from test order by id desc`
+
+	dataChan := make(chan *dataItem, 0)
+	resultChan := xsse.NewResultChan(ctx.Context(), dataChan)
+	steamData := xdb.NewStreamChan(dataChan)
+
+	go func() {
+		dbObj := glue.DB("microsql")
+		err := dbObj.QueryAs(ctx.Context(), SQL, nil, steamData)
+		if err != nil {
+			ctx.Log().Error(err)
+		}
+	}()
+	return resultChan
 }
 
 type tmpErr struct {
